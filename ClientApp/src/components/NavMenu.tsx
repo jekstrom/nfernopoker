@@ -21,6 +21,11 @@ class NavMenu extends React.Component<{}, {}> {
                 <Glyphicon glyph='home' /> Home
               </NavItem>
             </LinkContainer>
+            <LinkContainer to={'/register'} exact={true}>
+              <NavItem>
+                <Glyphicon glyph='home' /> Register
+              </NavItem>
+            </LinkContainer>
             <LinkContainer to={'/counter'}>
               <NavItem>
                 <Glyphicon glyph='education' /> Counter
