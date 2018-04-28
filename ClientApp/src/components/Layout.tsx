@@ -1,23 +1,45 @@
 import * as React from 'react';
-import { Col, Grid, Row } from 'react-bootstrap';
-import NavMenu from './NavMenu';
+//import AppHeader from "./AppHeader";
+import { MuiThemeProvider } from "material-ui/styles";
+import getMuiTheme from "material-ui/styles/getMuiTheme";
+import { Drawer, MenuItem } from "material-ui";
+import { Link } from "react-router-dom";
 
+export default class Layout extends React.Component<{}, {}> {
 
-class Layout extends React.Component<{}, {}> {
-  public render() {
-    return (
-      <Grid fluid={true}>
-      <Row>
-        <Col sm={3}>
-          <NavMenu />
-        </Col>
-        <Col sm={9}>
-          {this.props.children}
-        </Col>
-      </Row>
-    </Grid>
-    );
-  }
+	constructor(
+		public props: any,
+		public state: { open: true }) {
+		super(props, state);
+	}
+
+	public handleToggle = () => this.setState({ open: !this.state.open });
+
+	public handleClose = () => this.setState({ open: false });
+
+	public render() {
+		return (
+			<MuiThemeProvider muiTheme={getMuiTheme()}>
+				<Drawer
+					docked={true}
+					width={200}
+					open={this.state.open}
+				>
+					<MenuItem onClick={this.handleClose}>
+						<Link to={'/'}>Home</Link>
+					</MenuItem>
+					<MenuItem onClick={this.handleClose}>
+						<Link to={'/counter'}>Counter</Link>
+					</MenuItem>
+				</Drawer>
+
+				<div>
+					{this.props.children}
+				</div>
+
+			</MuiThemeProvider>
+		);
+	}
 }
 
-export default Layout;
+			  //<AppHeader />
