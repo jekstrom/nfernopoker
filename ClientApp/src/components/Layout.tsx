@@ -24,7 +24,7 @@ const styles: any = (theme: any) => ({
 		zIndex: 1,
 		overflow: 'hidden',
 		position: 'relative',
-		display: 'flex',
+		display: 'flex'
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,

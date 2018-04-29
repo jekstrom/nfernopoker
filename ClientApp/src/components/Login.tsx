@@ -16,6 +16,9 @@ interface ILoginState {
 }
 
 const styles: any = (theme: any) => ({
+	root: {
+		height: "100%"
+	},
 	login: {
 		width: "300px",
 		backgroundColor: theme.palette.background.default,
@@ -48,9 +51,13 @@ class Login extends Component<ILoginState> {
 		})
 	}
 
+	public handleClose = (event: MouseEvent<HTMLElement>) => {
+		this.setState({ errorMessage: undefined });
+	}
+
 	public render() {
 		return (
-			<Grid container={true} alignItems="center" alignContent="center" justify="center" direction="row">
+			<Grid className={this.props.classes.root} container={true} alignItems="center" alignContent="center" justify="center" direction="row">
 				<Grid item={true} className={this.props.classes.login} >
 					<TextField
 						id="username"
@@ -121,10 +128,6 @@ class Login extends Component<ILoginState> {
 			this.state.errorMessage = ex.message;
 		}
 	}
-
-	public handleClose = (event: MouseEvent<HTMLElement>) => {
-		this.setState({ errorMessage: undefined });
-	};
 
 }
 
