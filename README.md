@@ -8,6 +8,8 @@
  Had to pull typings for "@types/react": "^16.3.11" due to https://github.com/DefinitelyTyped/DefinitelyTyped/issues/20350
 	-Due to this issue you may have to manually delete your @types/react folder and reinstall
 
+Had to update material-ui to get the grid.
+https://material-ui-next.com/getting-started/usage/
 
 
 * Tools

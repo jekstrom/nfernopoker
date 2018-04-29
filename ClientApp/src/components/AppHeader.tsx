@@ -1,6 +1,5 @@
 ﻿import * as React from "react";
-import { AppBar, Avatar, IconButton } from 'material-ui';
-//import ActionAccountCircle from "material-ui/svg-icons/action/account-circle";
+import { AppBar } from 'material-ui';
 import { firebaseConnect } from "react-redux-firebase";
 import { Component, MouseEvent } from "react";
 
@@ -16,16 +15,11 @@ export default class AppHeader extends Component {
 
 	public render() {
 		let title = "N-Ferno-Poker";
-		const avatar_icon_size = 32;
-		const custom_padding = { padding: 8 };
 
 		return (
-			<AppBar className="appbar_in_main" title={title}
-				iconElementRight={
-					<IconButton onClick={this.login}
-						style={custom_padding}>
-						<Avatar size={avatar_icon_size} />
-					</IconButton>} />
+			<AppBar className="appbar_in_main" title={title}>
+				<div><p>Hi Mom</p></div>
+			</AppBar>
 		);
 	}
 
