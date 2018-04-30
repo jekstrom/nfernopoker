@@ -4,11 +4,12 @@ import { Close } from "@material-ui/icons";
 import { firebaseConnect } from "react-redux-firebase";
 import { Component, MouseEvent, ChangeEvent } from "react";
 
-//interface ILoginProps {
-//	firebase: any;
-//}
+export interface ILoginProps {
+	classes: any;
+	firebase: any;
+}
 
-interface ILoginState {
+export interface ILoginState {
 	username: string;
 	password: string;
 	errorMessage: string;
@@ -31,9 +32,8 @@ const styles: any = (theme: any) => ({
 	},
 });
 
-
 @firebaseConnect()
-class Login extends Component<ILoginState> {
+class Login extends Component<any, ILoginState> {
 
 	constructor(
 		public props: any,
@@ -46,13 +46,11 @@ class Login extends Component<ILoginState> {
 	public storePwrd = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
 
 	public componentWillMount() {
-		this.setState({
-			loginMessage: "Not registered yet, Register Now"
-		})
+		//this.setState({ loginMessage: "Not registered yet, Register Now" });
 	}
 
 	public handleClose = (event: MouseEvent<HTMLElement>) => {
-		this.setState({ errorMessage: undefined });
+		this.setState({ errorMessage: "" });
 	}
 
 	public render() {
@@ -77,12 +75,9 @@ class Login extends Component<ILoginState> {
 					/>
 					<br />
 					<Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary" onClick={this.login}>Submit</Button>
-					<br />
-					{this.state.loginMessage}
-					<Button className={this.props.classes.button} variant="raised" title="Register" color="secondary" onClick={this.login}>Register</Button>
 				</Grid>
 				<Snackbar
-					open={this.state.errorMessage != undefined}
+					open={this.state.errorMessage != ""}
 					autoHideDuration={6000}
 					SnackbarContentProps={{
 						'aria-describedby': 'message-id',
@@ -125,7 +120,7 @@ class Login extends Component<ILoginState> {
 				this.setState({ errorMessage: "Password: must be a valid string." });
 				return;
 			}
-			this.state.errorMessage = ex.message;
+			this.setState({ errorMessage: ex.message });
 		}
 	}
 
