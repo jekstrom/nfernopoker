@@ -1,12 +1,18 @@
+<<<<<<< HEAD
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import * as firebase from 'firebase'
+=======
+>>>>>>> 66fbb86c61c0467cf2ed032478bcb8562f001264
 import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
+<<<<<<< HEAD
 import { createStore, combineReducers, compose } from 'redux'
 import { firebaseReducer, reactReduxFirebase } from 'react-redux-firebase'
+=======
+>>>>>>> 66fbb86c61c0467cf2ed032478bcb8562f001264
 import { Router } from 'react-router';
 //import thunk from 'redux-thunk'
 //import configureStore from './store/configureStore';
@@ -14,6 +20,7 @@ import App from './App';
 import './index.css';
 import registerServiceWorker from './registerServiceWorker';
 
+<<<<<<< HEAD
 const firebaseConfig = {
   apiKey: "AIzaSyBGLY2OiLI-vcmE5Y8N0pLG5_b2Tn9nlyE",
   authDomain: "nfernopoker.firebaseapp.com",
@@ -73,6 +80,8 @@ const store = createStoreWithFirebase(rootReducer, initialState);
 // )
 // store.asyncReducers = {}
 
+=======
+>>>>>>> 66fbb86c61c0467cf2ed032478bcb8562f001264
 // Create browser history to use in the Redux store
 const baseUrl = document.getElementsByTagName('base')[0].getAttribute('href') as string;
 const history = createBrowserHistory({ basename: baseUrl });
