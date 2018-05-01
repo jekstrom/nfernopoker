@@ -6,11 +6,22 @@ import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import { Link } from 'react-router-dom';
-import { MenuItem, MuiThemeProvider } from 'material-ui';
+import { MenuItem, MuiThemeProvider, IconButton, Button } from 'material-ui';
 import { createMuiTheme } from 'material-ui/styles';
 import orange from 'material-ui/colors/orange';
+import { connect } from 'react-redux'
+import { Component, MouseEvent } from 'react';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase';
+import { compose } from 'redux';
+import { AccountCircle } from '@material-ui/icons';
 
-const drawerWidth = 240;
+export interface ILayoutProps {
+	firebase: any;
+	classes: any;
+	children: any;
+	profile: any;
+	auth: any;
+}
 
 const theme = createMuiTheme({
 	palette: {
@@ -29,9 +40,12 @@ const styles: any = (theme: any) => ({
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
 	},
+	appTitle: {
+		flex: 1
+	},
 	drawerPaper: {
 		position: 'relative',
-		width: drawerWidth,
+		width: 240,
 	},
 	content: {
 		flexGrow: 1,
@@ -43,18 +57,18 @@ const styles: any = (theme: any) => ({
 	toolbar: theme.mixins.toolbar,
 });
 
-class Layout extends React.Component {
+//TODO: Break AppBar logic out into separate component.
+class Layout extends Component<ILayoutProps> {
 
 	constructor(
-		public props: any,
-		public state: any
+		public props: ILayoutProps
 	) {
 		super(props)
 	}
 
-	public handleToggle = () => this.setState({ open: !this.state.open });
-
-	public handleClose = () => this.setState({ open: false });
+	public logout = (event: MouseEvent<HTMLElement>) => {
+		this.props.firebase.logout();
+	};
 
 	public render() {
 		return (
@@ -62,9 +76,26 @@ class Layout extends React.Component {
 				<div className={this.props.classes.root} >
 					<AppBar position="absolute" className={this.props.classes.appBar}>
 						<Toolbar>
-							<Typography variant="title" color="inherit" noWrap={true}>
+							<Typography className={this.props.classes.appTitle} variant="title" color="inherit" noWrap={true}>
 								NFERNO-POKER
 							</Typography>
+							{
+								!isEmpty(this.props.auth) &&
+								<div>
+									<Button variant="flat" onClick={this.logout}>Logout</Button>
+									<IconButton
+										aria-owns='menu-appbar'
+										aria-haspopup="true"
+										color="inherit"
+									>
+										<AccountCircle />
+									</IconButton>
+									<span>{this.props.profile.firstName} {this.props.profile.lastName}</span>
+								</div>
+							}
+							{
+								isEmpty(this.props.auth) && <Link to={'/'}>Login</Link>
+							}
 						</Toolbar>
 					</AppBar>
 					<Drawer
@@ -74,11 +105,11 @@ class Layout extends React.Component {
 						}}
 					>
 						<div className={this.props.classes.toolbar} />
-						<MenuItem onClick={this.handleClose}>
+						<MenuItem>
 							<Link to={'/'}>Home</Link>
 						</MenuItem>
 						<Divider />
-						<MenuItem onClick={this.handleClose}>
+						<MenuItem>
 							<Link to={'/counter'}>Counter</Link>
 						</MenuItem>
 					</Drawer>
@@ -92,4 +123,12 @@ class Layout extends React.Component {
 	}
 }
 
-export default withStyles(styles)(Layout);
+export default compose(
+	withStyles(styles),
+	firebaseConnect(),
+	connect((state: any, props: any) => ({
+		firebase: props.firebase,
+		auth: state.firebase.auth,
+		profile: state.firebase.profile // load profile
+	}))
+)(Layout);

@@ -3,17 +3,9 @@ import { Component, MouseEvent } from 'react';
 import Button from 'material-ui/Button';
 import Login from './Login';
 import Register from './Register';
-
-
-// { ILoginProps }
-// appContext = { this.props.parentContext }
-// appContext = { this.props.parentContext }
-// parentContext = { this}
-// parentContext = { this}
-
-//interface ILoginScreenProps {
-
-//}
+import { Grid, withStyles } from "material-ui";
+import { firebaseConnect } from "react-redux-firebase";
+import { withRouter, RouteComponentProps } from "react-router";
 
 interface ILoginScreenState {
 	buttonLabel: string;
@@ -22,37 +14,44 @@ interface ILoginScreenState {
 	isLogin: boolean;
 }
 
-const style = {
-	margin: 15,
-};
+interface ILoginScreenProps {
+	classes: any;
+	firebase: any;
+	router: any;
+}
 
-//  this.state = {
-//	    username: '',
-//	    password: '',
-//	    loginscreen: [],
-//	    loginmessage: '',
-//	    buttonLabel: 'Register',
-//	    isLogin: true
-//}
+const styles: any = (theme: any) => ({
+	button: { margin: 15 },
+	close: {
+		width: theme.spacing.unit * 4,
+		height: theme.spacing.unit * 4,
+	},
+	login: {
+		minWidth: "300px",
+		backgroundColor: theme.palette.background.default,
+		padding: "10px"
+	},
+	root: {
+		height: "100%"
+	}
+});
 
-
-export default class LoginScreen extends Component<any, ILoginScreenState> {
+@firebaseConnect()
+class LoginScreen extends Component<ILoginScreenProps & RouteComponentProps<any>, ILoginScreenState> {
 
 	public state: ILoginScreenState;
 
 	constructor(
-		public props: any
+		public props: ILoginScreenProps & RouteComponentProps<any>
 	) {
 		super(props);
 		this.state = { loginMessage: "", loginScreen: [], buttonLabel: "Register", isLogin: true };
 	}
 
 	public componentWillMount() {
-
-		let loginscreen = [<Login {...this.props} key={null} />];
+		let loginscreen = [<Login {...this.props} key={1} />];
 		let loginmessage = "Not registered yet, Register Now";
 		this.setState({
-
 			loginScreen: loginscreen,
 			loginMessage: loginmessage
 		});
@@ -60,26 +59,26 @@ export default class LoginScreen extends Component<any, ILoginScreenState> {
 
 	public onBtnClick = (event: any) => this.handleClick(event);
 
-	//className = "loginscreen"
-
 	public render() {
 		return (
-			<div >
-				{this.state.loginScreen}
-				<div>
-					{this.state.loginMessage}
-				</div>
-				<Button variant="raised" color="secondary" style={style} onClick={this.onBtnClick}>
-					{this.state.buttonLabel}
-				</Button>
-			</div>
+			<Grid className={this.props.classes.root} container={true} alignItems="center" alignContent="center" justify="center" direction="row">
+				<Grid item={true} className={this.props.classes.login}>
+						{this.state.loginScreen}
+						<div>
+							{this.state.loginMessage}
+						</div>
+						<Button variant="raised" type="Submit" color="secondary" className={this.props.classes.button} onClick={this.onBtnClick}>
+							{this.state.buttonLabel}
+						</Button>
+				</Grid>
+			</Grid>
 		);
 	}
 
 	public handleClick(event: MouseEvent<any>) {
 		let loginmessage: string;
 		if (this.state.isLogin) {
-			let loginscreen = [<Register {...this.props} key={null} />];
+			let loginscreen = [<Register {...this.props} key={2} />];
 			loginmessage = "Already registered. Go to Login";
 			this.setState({
 				loginScreen: loginscreen,
@@ -89,7 +88,7 @@ export default class LoginScreen extends Component<any, ILoginScreenState> {
 			})
 		}
 		else {
-			let loginscreen = [<Login {...this.props} key={null} />];
+			let loginscreen = [<Login {...this.props} key={3} />];
 			loginmessage = "Not Registered yet. Go to registration";
 			this.setState({
 				loginScreen: loginscreen,
@@ -101,5 +100,4 @@ export default class LoginScreen extends Component<any, ILoginScreenState> {
 	}
 
 }
-
-
+export default withStyles(styles)(withRouter(LoginScreen));

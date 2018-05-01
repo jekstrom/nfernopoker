@@ -1,8 +1,8 @@
 import * as React from "react";
-import { TextField, Button, Grid, withStyles, Snackbar, IconButton } from 'material-ui';
-import { Close } from "@material-ui/icons";
-import { firebaseConnect } from "react-redux-firebase";
+import { Button, TextField } from 'material-ui';
 import { Component, MouseEvent, ChangeEvent } from "react";
+import SnackWrapper from "./SnackWrapper";
+import { RouteComponentProps } from "react-router";
 
 export interface ILoginProps {
 	classes: any;
@@ -13,41 +13,21 @@ export interface ILoginState {
 	username: string;
 	password: string;
 	errorMessage: string;
-	loginMessage: string;
 }
 
-const styles: any = (theme: any) => ({
-	root: {
-		height: "100%"
-	},
-	login: {
-		width: "300px",
-		backgroundColor: theme.palette.background.default,
-		padding: "25px"
-	},
-	button: { margin: 15 },
-	close: {
-		width: theme.spacing.unit * 4,
-		height: theme.spacing.unit * 4,
-	},
-});
+export default class Login extends Component<ILoginProps & RouteComponentProps<any>, ILoginState> {
 
-@firebaseConnect()
-class Login extends Component<any, ILoginState> {
+	public state: ILoginState
 
 	constructor(
-		public props: any,
-		public state: ILoginState
+		public props: ILoginProps & RouteComponentProps<any>,
 	) {
-		super(props, state);
+		super(props);
+		this.state = { username: "", password: "", errorMessage: "" };
 	}
 
 	public storeUser = (event: ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value });
 	public storePwrd = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
-
-	public componentWillMount() {
-		//this.setState({ loginMessage: "Not registered yet, Register Now" });
-	}
 
 	public handleClose = (event: MouseEvent<HTMLElement>) => {
 		this.setState({ errorMessage: "" });
@@ -55,60 +35,44 @@ class Login extends Component<any, ILoginState> {
 
 	public render() {
 		return (
-			<Grid className={this.props.classes.root} container={true} alignItems="center" alignContent="center" justify="center" direction="row">
-				<Grid item={true} className={this.props.classes.login} >
-					<TextField
-						id="username"
-						fullWidth={true}
-						helperText="Enter your Username"
-						label="Username"
-						onChange={this.storeUser}
-					/>
-					<br />
-					<TextField
-						id="pword"
-						fullWidth={true}
-						type="password"
-						helperText="Enter your Password"
-						label="Password"
-						onChange={this.storePwrd}
-					/>
-					<br />
-					<Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary" onClick={this.login}>Submit</Button>
-				</Grid>
-				<Snackbar
-					open={this.state.errorMessage != ""}
-					autoHideDuration={6000}
-					SnackbarContentProps={{
-						'aria-describedby': 'message-id',
-					}}
-					action={[
-						<IconButton
-							key="close"
-							aria-label="Close"
-							color="inherit"
-							className={this.props.classes.close}
-							onClick={this.handleClose}
-						>
-							<Close />
-						</IconButton>,
-					]}
-					message={<span id="message-id"
-					>{this.state.errorMessage}</span>}
-
+			<form className={this.props.classes.login} onSubmit={this.login}>
+				<TextField
+					id="username"
+					fullWidth={true}
+					helperText="Enter your Username"
+					label="Username"
+					onChange={this.storeUser}
 				/>
-			</Grid >
+				<br />
+				<TextField
+					id="pword"
+					fullWidth={true}
+					type="password"
+					helperText="Enter your Password"
+					label="Password"
+					onChange={this.storePwrd}
+				/>
+
+				<br />
+
+				<Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary">Submit</Button>
+
+				<SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
+			</form>
 		);
 	}
 
 	public login = (event: MouseEvent<any>) => {
+		event.preventDefault();
+		event.stopPropagation();
 		try {
 			this.props.firebase.login({
 				email: this.state.username,
 				password: this.state.password
 			}).then((r: any) => {
-				console.log(r);
+				this.props.history.push('/counter');
 			}, (e: any) => {
+				console.log(e);
 				this.setState({ errorMessage: e.message });
 			});
 		} catch (ex) {
@@ -123,7 +87,4 @@ class Login extends Component<any, ILoginState> {
 			this.setState({ errorMessage: ex.message });
 		}
 	}
-
 }
-
-export default withStyles(styles)(Login);

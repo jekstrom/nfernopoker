@@ -2,7 +2,7 @@ import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
 import * as Counter from './Counter';
-import { reactReduxFirebase } from 'react-redux-firebase';
+import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import * as firebase from "firebase";
 
 export default function configureStore(history: any, initialState: any) {
@@ -20,7 +20,10 @@ export default function configureStore(history: any, initialState: any) {
 	// react-redux-firebase options
 	const config = {
 		userProfile: 'users', // firebase root where user profiles are stored
-		enableLogging: false, // enable/disable Firebase's database logging
+		presence: 'presence', // where list of online users is stored in database
+		sessions: 'sessions', // where list of user sessions is stored in database (presence must be enabled)
+		attachAuthIsReady: true, // attaches auth is ready promise to store
+		enableLogging: true, // enable/disable Firebase's database logging
 	}
 
 	firebase.initializeApp(firebaseConfig);
@@ -47,15 +50,22 @@ export default function configureStore(history: any, initialState: any) {
 	}
 
 	const rootReducer = combineReducers({
+		firebase: firebaseReducer,
 		...reducers,
 		routing: routerReducer
 	});
 
 	// Create store with reducers and initial state
-	return createStoreWithFirebase(
+	let store = createStoreWithFirebase(
 		rootReducer,
 		initialState,
 		compose(applyMiddleware(...middleware), ...enhancers)
 	);
 
+	// Listen for auth ready (promise available on store thanks to attachAuthIsReady: true config option)
+	//store.firebaseAuthIsReady.then(() => {
+	//	console.log('Auth has loaded') // eslint-disable-line no-console
+	//})
+
+	return store;
 }

@@ -2,10 +2,12 @@
 import { Component, MouseEvent, ChangeEvent } from 'react';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-import { firebaseConnect } from "react-redux-firebase";
+import SnackWrapper from "./SnackWrapper";
+import { RouteComponentProps } from "react-router";
 
 export interface IRegisterProps {
 	firebase: any;
+	classes: any;
 }
 
 export interface IRegisterState {
@@ -13,14 +15,14 @@ export interface IRegisterState {
 	lastName: string;
 	email: string;
 	password: string;
+	errorMessage: string;
 }
 
-@firebaseConnect()
-class Register extends Component<any, any> {
+export default class Register extends Component<IRegisterProps & RouteComponentProps<any>, IRegisterState> {
 
 	constructor(
-		public props: any,
-		public state: any
+		public props: IRegisterProps & RouteComponentProps<any>,
+		public state: IRegisterState
 	) {
 		super(props, state);
 	}
@@ -33,30 +35,45 @@ class Register extends Component<any, any> {
 	public setPassword = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
 	public handleSubmit = (event: any) => this.handleClick(event);
 
-
 	public handleClick = (event: MouseEvent<HTMLInputElement>) => {
-		this.props.firebase.createUser(
-			{ email: this.state.email, password: this.state.password },
-			{ firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
-		)
+		event.preventDefault();
+		event.stopPropagation();
+		try {
+			this.props.firebase.createUser(
+				{ email: this.state.email, password: this.state.password },
+				{ firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
+			).then((r: any) => {
+				this.props.history.push('/counter');
+			}, (e: any) => {
+				this.setState({ errorMessage: e.message });
+			});
+		} catch (ex) {
+			this.setState({ errorMessage: ex.message });
+		}
 	}
-
+	//TODO: Look into using SnackWrapper with state and only having one instance of the component.
 	public render() {
 		return (
-			<div>
+			<form onSubmit={this.handleSubmit}>
 				<TextField
+					required={true}
+					fullWidth={true}
 					helperText="Enter your First Name"
 					label="First Name"
 					onChange={this.setFirst}
 				/>
 				<br />
 				<TextField
+					required={true}
+					fullWidth={true}
 					helperText="Enter your Last Name"
 					label="Last Name"
 					onChange={this.setLast}
 				/>
 				<br />
 				<TextField
+					required={true}
+					fullWidth={true}
 					helperText="Enter your Email"
 					type="email"
 					label="Email"
@@ -64,20 +81,22 @@ class Register extends Component<any, any> {
 				/>
 				<br />
 				<TextField
+					required={true}
+					fullWidth={true}
 					type="password"
 					helperText="Enter your Password"
 					label="Password"
 					onChange={this.setPassword}
 				/>
 				<br />
-				<Button variant="raised" type="submit" style={this._style} onClick={this.handleSubmit}>
+				<Button variant="raised" type="submit" style={this._style}>
 					Submit
 				</Button>
-			</div>
+
+				<SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
+
+			</form>
 		);
 	}
 
 }
-
-
-export default Register;
