@@ -1,16 +1,22 @@
 declare namespace Types {
-  type Routing = {
-    location: string | null;
-  }
+	type Routing = {
+		location: string | null;
+	}
 
-  type Counter = {
-    count: number;
-    increment: any;
-    decrement: any;
-  }
+	type Counter = {
+		count: number;
+		increment: any;
+		decrement: any;
+	}
 
-  export type Store = {
-    counter: Counter,
-    routing: Routing;
-  }
+	type Message = {
+		open: boolean;
+		message: string;
+	}
+
+	export type Store = {
+		counter: Counter;
+		snack: Message;
+		routing: Routing;
+	}
 }

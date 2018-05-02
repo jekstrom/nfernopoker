@@ -14,8 +14,10 @@ import { Component, MouseEvent } from 'react';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { AccountCircle } from '@material-ui/icons';
+import SnackWrapper from './SnackWrapper';
 
 export interface ILayoutProps {
+	snack: any;
 	firebase: any;
 	classes: any;
 	children: any;
@@ -54,7 +56,7 @@ const styles: any = (theme: any) => ({
 		padding: theme.spacing.unit * 3,
 		minWidth: 0, // So the Typography noWrap works
 	},
-	toolbar: theme.mixins.toolbar,
+	toolbar: theme.mixins.toolbar
 });
 
 //TODO: Break AppBar logic out into separate component.
@@ -106,7 +108,7 @@ class Layout extends Component<ILayoutProps> {
 					>
 						<div className={this.props.classes.toolbar} />
 						<MenuItem>
-							<Link to={'/'}>Home</Link>
+							<Link to={'/'}>Home</Link>lol
 						</MenuItem>
 						<Divider />
 						<MenuItem>
@@ -118,6 +120,7 @@ class Layout extends Component<ILayoutProps> {
 						{this.props.children}
 					</main>
 				</div>
+				<SnackWrapper {...this.props.snack} {...this.props}/>
 			</MuiThemeProvider>
 		);
 	}
@@ -127,6 +130,7 @@ export default compose(
 	withStyles(styles),
 	firebaseConnect(),
 	connect((state: any, props: any) => ({
+		snack: state.snack,
 		firebase: props.firebase,
 		auth: state.firebase.auth,
 		profile: state.firebase.profile // load profile

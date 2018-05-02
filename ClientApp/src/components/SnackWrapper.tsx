@@ -2,34 +2,32 @@
 import { Component, MouseEvent } from 'react';
 import { Snackbar, IconButton } from "material-ui";
 import { Close } from "@material-ui/icons";
+//import { mapDispatchToProps } from '../actions/Message';
+//import { connect } from "react-redux";
 
 export interface ISnackWrapperProps {
-	errorMessage: string;
 	classes: any;
+	message: string;
+	open: boolean;
 }
 
 export default class SnackWrapper extends Component<ISnackWrapperProps, any> {
 
 	constructor(
-		public props: ISnackWrapperProps,
+		public props: ISnackWrapperProps
 	) {
 		super(props);
-		this.state = { isOpen: false };
-	}
-
-	public get open() {
-		return Boolean(this.props.errorMessage);
 	}
 
 	public handleClose = (event: MouseEvent<HTMLElement>) => {
-		this.setState({ isOpen: false });
+		this.setState({ message: "" });
 	}
 
 	public render() {
 		return (
 			<Snackbar
-				open={this.open}
-				autoHideDuration={6000}
+				open={true}
+				autoHideDuration={5000}
 				SnackbarContentProps={{
 					'aria-describedby': 'message-id',
 				}}
@@ -45,10 +43,15 @@ export default class SnackWrapper extends Component<ISnackWrapperProps, any> {
 					</IconButton>,
 				]}
 				message={<span id="message-id"
-				>{this.props.errorMessage}</span>}
+				>{this.props.message}</span>}
 			/>
 		);
 	}
-
 }
 
+//const mapStateToProps = (state: Types.Message, props: ISnackWrapperProps) => {
+//	props.message = state.message;
+//	props.open = state.open;
+//};
+
+//export default conn(SnackWrapper);

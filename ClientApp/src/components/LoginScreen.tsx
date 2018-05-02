@@ -6,6 +6,7 @@ import Register from './Register';
 import { Grid, withStyles } from "material-ui";
 import { firebaseConnect } from "react-redux-firebase";
 import { withRouter, RouteComponentProps } from "react-router";
+import { ISnackWrapperProps } from "./SnackWrapper";
 
 interface ILoginScreenState {
 	buttonLabel: string;
@@ -14,7 +15,7 @@ interface ILoginScreenState {
 	isLogin: boolean;
 }
 
-interface ILoginScreenProps {
+interface ILoginScreenProps extends ISnackWrapperProps {
 	classes: any;
 	firebase: any;
 	router: any;

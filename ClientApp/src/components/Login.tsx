@@ -1,7 +1,6 @@
 import * as React from "react";
 import { Button, TextField } from 'material-ui';
 import { Component, MouseEvent, ChangeEvent } from "react";
-import SnackWrapper from "./SnackWrapper";
 import { RouteComponentProps } from "react-router";
 
 export interface ILoginProps {
@@ -56,8 +55,6 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
 				<br />
 
 				<Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary">Submit</Button>
-
-				<SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
 			</form>
 		);
 	}

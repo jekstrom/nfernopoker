@@ -2,7 +2,6 @@
 import { Component, MouseEvent, ChangeEvent } from 'react';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
-import SnackWrapper from "./SnackWrapper";
 import { RouteComponentProps } from "react-router";
 
 export interface IRegisterProps {
@@ -92,9 +91,6 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
 				<Button variant="raised" type="submit" style={this._style}>
 					Submit
 				</Button>
-
-				<SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
-
 			</form>
 		);
 	}
