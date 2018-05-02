@@ -1,32 +1,34 @@
 ﻿import * as React from "react";
-import { Component, MouseEvent } from 'react';
+import * as redux from 'redux';
+import { Component } from 'react';
 import { Snackbar, IconButton } from "material-ui";
 import { Close } from "@material-ui/icons";
-//import { mapDispatchToProps } from '../actions/Message';
-//import { connect } from "react-redux";
+import { connect } from "react-redux";
+import { MessageTypes } from "../actions/Message";
 
-export interface ISnackWrapperProps {
+// Props
+// Local props
+interface ISnackWrapperProps {
 	classes: any;
+}
+// Connected Redux state
+interface IConnectedState {
 	message: string;
 	open: boolean;
 }
+// Connected Redux action dispatch
+interface IConnectedDispatch {
+	sendMessage: (message: string) => void,
+	clear: () => void
+}
 
-export default class SnackWrapper extends Component<ISnackWrapperProps, any> {
+type IProps = ISnackWrapperProps & IConnectedState & IConnectedDispatch
 
-	constructor(
-		public props: ISnackWrapperProps
-	) {
-		super(props);
-	}
-
-	public handleClose = (event: MouseEvent<HTMLElement>) => {
-		this.setState({ message: "" });
-	}
-
+class SnackWrapperComponent extends Component<IProps, {}> {
 	public render() {
 		return (
 			<Snackbar
-				open={true}
+				open={this.props.open}
 				autoHideDuration={5000}
 				SnackbarContentProps={{
 					'aria-describedby': 'message-id',
@@ -37,7 +39,7 @@ export default class SnackWrapper extends Component<ISnackWrapperProps, any> {
 						aria-label="Close"
 						color="inherit"
 						className={this.props.classes.close}
-						onClick={this.handleClose}
+						onClick={this.props.clear}
 					>
 						<Close />
 					</IconButton>,
@@ -49,9 +51,17 @@ export default class SnackWrapper extends Component<ISnackWrapperProps, any> {
 	}
 }
 
-//const mapStateToProps = (state: Types.Message, props: ISnackWrapperProps) => {
-//	props.message = state.message;
-//	props.open = state.open;
-//};
+const mapStateToProps = (state: Types.Message, props: IProps): IConnectedState => ({
+	message: state.message,
+	open: state.open
+});
+const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): IConnectedDispatch => ({
+	sendMessage: (message: string) => {
+		dispatch({ type: MessageTypes.ToastMessage, payload: message });
+	},
+	clear: () => {
+		dispatch({ type: MessageTypes.ToastClearMessage });
+	}
+});
 
-//export default conn(SnackWrapper);
+export const SnackWrapper: React.ComponentClass<IProps> = connect(mapStateToProps, mapDispatchToProps)(SnackWrapperComponent);

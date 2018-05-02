@@ -1,5 +1,4 @@
-﻿import { ISnackWrapperProps } from '../components/SnackWrapper';
-import { MessageTypes } from '../actions/Message';
+﻿import { MessageTypes } from '../actions/Message';
 import { AnyAction } from 'redux';
 
 const initialState = {
@@ -9,7 +8,7 @@ const initialState = {
 	}
 };
 
-export const reducer = (state: ISnackWrapperProps, action: AnyAction) => {
+export const reducer = (state: Types.Message, action: AnyAction) => {
 	state = state || initialState;
 	if (action.type == MessageTypes.ToastMessage) {
 		return {

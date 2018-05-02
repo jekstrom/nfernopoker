@@ -14,7 +14,7 @@ import { Component, MouseEvent } from 'react';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { AccountCircle } from '@material-ui/icons';
-import SnackWrapper from './SnackWrapper';
+import { SnackWrapper } from './SnackWrapper';
 
 export interface ILayoutProps {
 	snack: any;
