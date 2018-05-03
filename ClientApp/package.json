@@ -4,14 +4,13 @@
   "private": true,
   "dependencies": {
     "@material-ui/icons": "^1.0.0-beta.43",
-    "bootstrap": "^3.3.7",
     "firebase": "^4.12.1",
     "history": "^4.7.2",
     "material-ui": "^1.0.0-beta.43",
     "react": "^16.3.2",
     "react-dom": "^16.0.0",
     "react-redux": "^5.0.6",
-    "react-router-bootstrap": "^0.24.4",
+    "react-redux-firebase": "^2.1.0",
     "react-router-dom": "^4.2.2",
     "react-router-redux": "^5.0.0-alpha.8",
     "react-scripts": "1.0.17",
@@ -33,14 +32,11 @@
     "@types/node": "^9.6.5",
     "@types/prop-types": "^15.5.2",
     "@types/react": "^16.3.13",
-    "@types/react-bootstrap": "^0.32.8",
     "@types/react-dom": "^16.0.5",
     "@types/react-redux": "^5.0.16",
     "@types/react-router": "^4.0.23",
-    "@types/react-router-bootstrap": "^0.24.4",
     "@types/react-router-dom": "^4.2.6",
     "@types/react-router-redux": "^5.0.13",
-    "react-bootstrap": "^0.32.1",
     "typescript": "^2.8.1"
   }
 }
