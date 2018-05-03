@@ -1,5 +1,12 @@
 {
   "extends": [],
+  "rules": {
+    "indent": [
+      true,
+      "spaces",
+      2
+    ]
+  },
   "linterOptions": {
     "exclude": [
       "config/**/*.js",
