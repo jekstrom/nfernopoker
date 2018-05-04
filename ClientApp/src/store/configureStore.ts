@@ -62,10 +62,5 @@ export default function configureStore(history: any, initialState: any) {
     compose(applyMiddleware(...middleware), ...enhancers)
   );
 
-  // Listen for auth ready (promise available on store thanks to attachAuthIsReady: true config option)
-  //store.firebaseAuthIsReady.then(() => {
-  //	console.log('Auth has loaded') // eslint-disable-line no-console
-  //})
-
   return store;
 }
