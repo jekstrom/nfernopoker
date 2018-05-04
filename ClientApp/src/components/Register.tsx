@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { Component, MouseEvent, ChangeEvent } from 'react';
 import Button from 'material-ui/Button';
 import TextField from 'material-ui/TextField';
@@ -91,7 +91,7 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
         <br />
         <Button variant="raised" type="submit" style={this._style}>
           Submit
-				</Button>
+        </Button>
 
         <SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
 

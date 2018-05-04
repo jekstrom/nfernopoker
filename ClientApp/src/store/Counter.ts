@@ -1,4 +1,4 @@
-﻿import { ICounterProps } from '../components/Counter'
+import { ICounterProps } from '../components/Counter'
 import { CountTypes } from '../actions/Counter';
 
 const initialState = { count: 0 };
