@@ -13,24 +13,23 @@ export interface ILoginState {
   username: string;
   password: string;
   errorMessage: string;
+  openSnack: boolean;
 }
 
 export default class Login extends Component<ILoginProps & RouteComponentProps<any>, ILoginState> {
 
-  public state: ILoginState
-
   constructor(
     public props: ILoginProps & RouteComponentProps<any>,
+    public state: ILoginState
   ) {
     super(props);
-    this.state = { username: "", password: "", errorMessage: "" };
   }
 
   public storeUser = (event: ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value });
   public storePwrd = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
 
-  public handleClose = (event: MouseEvent<HTMLElement>) => {
-    this.setState({ errorMessage: "" });
+  public closeSnack = () => {
+    this.setState({ errorMessage: "", openSnack: false });
   }
 
   public render() {
@@ -57,7 +56,8 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
 
         <Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary">Submit</Button>
 
-        <SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
+        <SnackWrapper message={this.state.errorMessage} classes={this.props.classes} open={this.state.openSnack} handleClose={this.closeSnack} />
+
       </form>
     );
   }
@@ -73,18 +73,18 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
         this.props.history.push('/counter');
       }, (e: any) => {
         console.log(e);
-        this.setState({ errorMessage: e.message });
+        this.setState({ errorMessage: e.message, openSnack: true });
       });
     } catch (ex) {
       if (ex.message == 'signInWithEmailAndPassword failed: First argument "email" must be a valid string.') {
-        this.setState({ errorMessage: "Email: must be a valid string." });
+        this.setState({ errorMessage: "Email: must be a valid string.", openSnack: true });
         return;
       }
       if (ex.message == 'signInWithEmailAndPassword failed: Second argument "password" must be a valid string.') {
-        this.setState({ errorMessage: "Password: must be a valid string." });
+        this.setState({ errorMessage: "Password: must be a valid string.", openSnack: true });
         return;
       }
-      this.setState({ errorMessage: ex.message });
+      this.setState({ errorMessage: ex.message, openSnack: true });
     }
   }
 }

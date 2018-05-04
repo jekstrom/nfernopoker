@@ -16,6 +16,7 @@ export interface IRegisterState {
   email: string;
   password: string;
   errorMessage: string;
+  openSnack: boolean;
 }
 
 export default class Register extends Component<IRegisterProps & RouteComponentProps<any>, IRegisterState> {
@@ -24,7 +25,7 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
     public props: IRegisterProps & RouteComponentProps<any>,
     public state: IRegisterState
   ) {
-    super(props, state);
+    super(props);
   }
 
   private _style = { margin: 15 };
@@ -45,12 +46,17 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
       ).then((r: any) => {
         this.props.history.push('/counter');
       }, (e: any) => {
-        this.setState({ errorMessage: e.message });
+        this.setState({ errorMessage: e.message, openSnack: true });
       });
     } catch (ex) {
-      this.setState({ errorMessage: ex.message });
+      this.setState({ errorMessage: ex.message, openSnack: true });
     }
   }
+
+  public closeSnack = () => {
+    this.setState({ errorMessage: "", openSnack: false });
+  }
+
   //TODO: Look into using SnackWrapper with state and only having one instance of the component.
   public render() {
     return (
@@ -93,7 +99,7 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
           Submit
         </Button>
 
-        <SnackWrapper errorMessage={this.state.errorMessage} classes={this.props.classes} />
+        <SnackWrapper message={this.state.errorMessage} classes={this.props.classes} open={this.state.openSnack} handleClose={this.closeSnack} />
 
       </form>
     );
