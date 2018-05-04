@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { withStyles } from 'material-ui/styles';
 import Drawer from 'material-ui/Drawer';
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
 import Divider from 'material-ui/Divider';
 import { Link } from 'react-router-dom';
-import { MenuItem, MuiThemeProvider, IconButton, Button } from 'material-ui';
+import { MenuItem, MuiThemeProvider } from 'material-ui';
 import { createMuiTheme } from 'material-ui/styles';
 import orange from 'material-ui/colors/orange';
 import { connect } from 'react-redux'
-import { Component, MouseEvent } from 'react';
-import { firebaseConnect, isEmpty } from 'react-redux-firebase';
+import { Component } from 'react';
+import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
-import { AccountCircle } from '@material-ui/icons';
+import AppHeader from './AppHeader';
 
 export interface ILayoutProps {
   firebase: any;
@@ -57,7 +54,6 @@ const styles: any = (theme: any) => ({
   toolbar: theme.mixins.toolbar,
 });
 
-//TODO: Break AppBar logic out into separate component.
 class Layout extends Component<ILayoutProps> {
 
   constructor(
@@ -66,38 +62,11 @@ class Layout extends Component<ILayoutProps> {
     super(props)
   }
 
-  public logout = (event: MouseEvent<HTMLElement>) => {
-    this.props.firebase.logout();
-  };
-
   public render() {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={this.props.classes.root} >
-          <AppBar position="absolute" className={this.props.classes.appBar}>
-            <Toolbar>
-              <Typography className={this.props.classes.appTitle} variant="title" color="inherit" noWrap={true}>
-                NFERNO-POKER
-              </Typography>
-              {
-                !isEmpty(this.props.auth) &&
-                <div>
-                  <Button variant="flat" onClick={this.logout}>Logout</Button>
-                  <IconButton
-                    aria-owns='menu-appbar'
-                    aria-haspopup="true"
-                    color="inherit"
-                  >
-                    <AccountCircle />
-                  </IconButton>
-                  <span>{this.props.profile.firstName} {this.props.profile.lastName}</span>
-                </div>
-              }
-              {
-                isEmpty(this.props.auth) && <Link to={'/'}>Login</Link>
-              }
-            </Toolbar>
-          </AppBar>
+          <AppHeader {...this.props} />
           <Drawer
             variant="permanent"
             classes={{
