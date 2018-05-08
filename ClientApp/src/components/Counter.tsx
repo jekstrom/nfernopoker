@@ -10,13 +10,13 @@ export declare interface ICounterProps {
 
 class Counter extends React.Component<ICounterProps, {}> {
   public render() {
-    return (      
+    return (
       <div>
         <h1>Counter</h1>
-    
+
         <p>This is a simple example of a React component.</p>
-    
-        <p>Current count: <strong>{ this.props.count }</strong></p>
+
+        <p>Current count: <strong>{this.props.count}</strong></p>
         <button onClick={this.props.increment}>Increment</button>
         <button onClick={this.props.decrement}>Decrement</button>
       </div>

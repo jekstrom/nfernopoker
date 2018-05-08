@@ -11,23 +11,23 @@ export declare interface ICounterProps {
 }
 
 const Counter = ({ count, firebase }: any) => {
-    const pushSample = () => firebase.push('count', { count: 1 })
-    const currentCount = !isLoaded(count)
+  const pushSample = () => firebase.push('count', { count: 1 })
+  const currentCount = !isLoaded(count)
     ? 'Loading'
     : isEmpty(count)
       ? { count: 1 }
       : count
-      console.log(currentCount)
-    return (
-        <div>
-        <h1>Counter</h1>
-    
-        <p>This is a simple example of a React component.</p>
-    
-        <p>Current count: <strong>{currentCount.count}</strong></p>
-        <button onClick={pushSample}>Increment</button>
-      </div>
-    )
+  console.log(currentCount)
+  return (
+    <div>
+      <h1>Counter</h1>
+
+      <p>This is a simple example of a React component.</p>
+
+      <p>Current count: <strong>{currentCount.count}</strong></p>
+      <button onClick={pushSample}>Increment</button>
+    </div>
+  )
 }
 
 //const mapStateToProps = (state: Types.Store, props: ICounterProps) => state.counter;
@@ -35,11 +35,11 @@ const Counter = ({ count, firebase }: any) => {
 // export default firebaseConnect(mapStateToProps, mapDispatchToProps)(Counter);
 //export default withFirebase(Counter)
 export default compose(
-    firebaseConnect((props: any) => [
-      'count' // { path: '/todos' } // object notation
-    ]),
-    connect((state: any, props: any) => ({
-      count: state.firebase.data.count,
-      // profile: state.firebase.profile // load profile
-    }))
-  )(Counter)
+  firebaseConnect((props: any) => [
+    'count' // { path: '/todos' } // object notation
+  ]),
+  connect((state: any, props: any) => ({
+    count: state.firebase.data.count,
+    // profile: state.firebase.profile // load profile
+  }))
+)(Counter)

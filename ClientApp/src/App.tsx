@@ -1,4 +1,4 @@
-﻿import * as React from 'react';
+import * as React from 'react';
 import { Route } from 'react-router';
 import Counter from './components/Counter';
 import LoginScreen from './components/LoginScreen';
