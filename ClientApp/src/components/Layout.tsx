@@ -33,28 +33,34 @@ const theme = createMuiTheme({
 
 const styles: any = (theme: any) => ({
 	root: {
-		flexGrow: 1,
+		display: 'grid',
+		grid: `
+			[navrow-start] "appbar appbar" 64px [navrow-end]
+			[mainrow-start] "drawer main" calc(100vh - 64px) [mainrow-end]
+			/ 256px 1fr
+		`,
 		zIndex: 1,
 		overflow: 'hidden',
 		position: 'relative',
-		display: 'flex'
 	},
 	appBar: {
 		zIndex: theme.zIndex.drawer + 1,
+		gridArea: 'appbar'
 	},
 	appTitle: {
 		flex: 1
 	},
 	drawerPaper: {
 		position: 'relative',
-		width: 240,
+		minWidth: 240
 	},
 	content: {
-		flexGrow: 1,
 		backgroundColor: theme.palette.background.default,
 		backgroundImage: `url('/img/hell.jpg')`,
 		padding: theme.spacing.unit * 3,
 		minWidth: 0, // So the Typography noWrap works
+		filter: 'saturate(125%)',
+		gridArea: 'main'
 	},
 	toolbar: theme.mixins.toolbar
 });
@@ -67,7 +73,6 @@ class Layout extends Component<ILayoutProps> {
 	) {
 		super(props)
 	}
-
 	public logout = (event: MouseEvent<HTMLElement>) => {
 		this.props.firebase.logout();
 	};
@@ -96,31 +101,27 @@ class Layout extends Component<ILayoutProps> {
 								</div>
 							}
 							{
-								isEmpty(this.props.auth) && <Link to={'/'}>Login</Link>
+								isEmpty(this.props.auth) && <Link to={'/'}><Button variant="flat">Login</Button></Link>
 							}
 						</Toolbar>
 					</AppBar>
 					<Drawer
 						variant="permanent"
+						style={{gridArea: 'drawer'}}
 						classes={{
-							paper: this.props.classes.drawerPaper,
+							paper: this.props.classes.drawerPaper
 						}}
 					>
-						<div className={this.props.classes.toolbar} />
-						<MenuItem>
-							<Link to={'/'}>Home</Link>lol
-						</MenuItem>
+						<Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home lol</MenuItem></Link>
 						<Divider />
-						<MenuItem>
-							<Link to={'/counter'}>Counter</Link>
-						</MenuItem>
+						<Link to={'/counter'}><MenuItem selected={window.location.pathname === '/counter'}>Counter</MenuItem></Link>
+						<Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
 					</Drawer>
 					<main className={this.props.classes.content}>
-						<div className={this.props.classes.toolbar} />
 						{this.props.children}
 					</main>
 				</div>
-				<SnackWrapper {...this.props.snack} {...this.props}/>
+				<SnackWrapper classes={this.props.classes} />
 			</MuiThemeProvider>
 		);
 	}

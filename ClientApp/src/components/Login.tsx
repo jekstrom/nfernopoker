@@ -1,25 +1,30 @@
 import * as React from "react";
-import { Button, TextField } from 'material-ui';
+import { Button, TextField, CardContent, CardActions, Typography } from 'material-ui';
 import { Component, MouseEvent, ChangeEvent } from "react";
 import { RouteComponentProps } from "react-router";
+import { withFirebase } from "react-redux-firebase";
 
-export interface ILoginProps {
+interface ILoginProps {
 	classes: any;
-	firebase: any;
+	secondaryButtonText: string;
+	onSecondaryButton: () => void;
 }
-
-export interface ILoginState {
+interface ILoginState {
 	username: string;
 	password: string;
 	errorMessage: string;
 }
+interface IFirebase {
+	firebase: any;
+}
+type IProps = ILoginProps & IFirebase & RouteComponentProps<any>;
 
-export default class Login extends Component<ILoginProps & RouteComponentProps<any>, ILoginState> {
+class LoginComponent extends Component<IProps, ILoginState> {
 
 	public state: ILoginState
 
 	constructor(
-		public props: ILoginProps & RouteComponentProps<any>,
+		public props: IProps,
 	) {
 		super(props);
 		this.state = { username: "", password: "", errorMessage: "" };
@@ -34,28 +39,34 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
 
 	public render() {
 		return (
-			<form className={this.props.classes.login} onSubmit={this.login}>
-				<TextField
-					id="username"
-					fullWidth={true}
-					helperText="Enter your Username"
-					label="Username"
-					onChange={this.storeUser}
-				/>
-				<br />
-				<TextField
-					id="pword"
-					fullWidth={true}
-					type="password"
-					helperText="Enter your Password"
-					label="Password"
-					onChange={this.storePwrd}
-				/>
-
-				<br />
-
-				<Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary">Submit</Button>
-			</form>
+			<React.Fragment>
+				<CardContent>
+					<Typography className={this.props.classes.title} color="textSecondary">
+						Log in to feel the burn
+					</Typography>
+					<TextField
+						id="username"
+						fullWidth={true}
+						label="Email"
+						onChange={this.storeUser}
+						className={this.props.classes.button}
+					/>
+					<TextField
+						id="pword"
+						fullWidth={true}
+						type="password"
+						label="Password"
+						onChange={this.storePwrd}
+						className={this.props.classes.button}
+					/>
+				</CardContent>
+				<CardActions>
+					<Button className={this.props.classes.button} onClick={this.login} variant="raised" style={{marginLeft: '16px'}} title="Login" color="primary">Login</Button>
+					<Button onClick={this.props.onSecondaryButton} size="small">
+						{this.props.secondaryButtonText}
+					</Button>
+				</CardActions>
+			</React.Fragment>
 		);
 	}
 
@@ -85,3 +96,5 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
 		}
 	}
 }
+
+export const Login: React.ComponentClass<ILoginProps> = withFirebase(LoginComponent)

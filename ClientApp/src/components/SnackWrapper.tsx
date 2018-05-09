@@ -6,17 +6,13 @@ import { Close } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { MessageTypes } from "../actions/Message";
 
-// Props
-// Local props
 interface ISnackWrapperProps {
 	classes: any;
 }
-// Connected Redux state
 interface IConnectedState {
 	message: string;
 	open: boolean;
 }
-// Connected Redux action dispatch
 interface IConnectedDispatch {
 	sendMessage: (message: string) => void,
 	clear: () => void
@@ -51,7 +47,7 @@ class SnackWrapperComponent extends Component<IProps, {}> {
 	}
 }
 
-const mapStateToProps = (state: Types.Message, props: IProps): IConnectedState => ({
+const mapStateToProps = (state: Types.Message, props: ISnackWrapperProps): IConnectedState => ({
 	message: state.message,
 	open: state.open
 });
@@ -64,4 +60,4 @@ const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): IConnectedDi
 	}
 });
 
-export const SnackWrapper: React.ComponentClass<IProps> = connect(mapStateToProps, mapDispatchToProps)(SnackWrapperComponent);
+export const SnackWrapper: React.ComponentClass<ISnackWrapperProps> = connect(mapStateToProps, mapDispatchToProps)(SnackWrapperComponent);
