@@ -1,7 +1,8 @@
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
+import * as redux from 'redux';
 import thunk from 'redux-thunk';
-import * as Counter from './Counter';
+import * as CounterReducers from './Counter';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import * as firebase from "firebase";
 
@@ -34,7 +35,7 @@ export default function configureStore(history: any, initialState: any) {
   )(createStore)
 
   const reducers = {
-    counter: Counter.reducer
+    counter: CounterReducers.default
   };
 
   const middleware = [
@@ -56,7 +57,7 @@ export default function configureStore(history: any, initialState: any) {
   });
 
   // Create store with reducers and initial state
-  let store = createStoreWithFirebase(
+  let store: redux.Store<{ counter: { value: number } }> = createStoreWithFirebase(
     rootReducer,
     initialState,
     compose(applyMiddleware(...middleware), ...enhancers)

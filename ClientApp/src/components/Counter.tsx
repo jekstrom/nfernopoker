@@ -1,29 +1,39 @@
 import * as React from 'react';
+import * as redux from 'redux';
 import { connect } from 'react-redux';
-import { mapDispatchToProps } from '../actions/Counter'
+import { incrementCounter } from '../actions/Counter'
 
-export declare interface ICounterProps {
-  count: number;
-  increment: any;
-  decrement: any;
+interface IConnectedDispatch {
+  increment: (n: number) => void
 }
 
-class Counter extends React.Component<ICounterProps, {}> {
-  public render() {
-    return (
-      <div>
-        <h1>Counter</h1>
+// type ConnectedState = {
+//   counter: { value: number }
+// }
 
-        <p>This is a simple example of a React component.</p>
+interface OwnState { }
 
-        <p>Current count: <strong>{this.props.count}</strong></p>
-        <button onClick={this.props.increment}>Increment</button>
-        <button onClick={this.props.decrement}>Decrement</button>
-      </div>
-    );
+class CounterComponent extends React.Component<{ value: number } & IConnectedDispatch, OwnState> {
+  _onClickIncrement = () => {
+    this.props.increment(1)
+  }
+
+  render() {
+    const { value } = this.props
+    return <div>
+      <pre>counter = {value}</pre>
+      <pre>counter (nested) = {(this.props as any).counter.value}</pre>
+      <button ref='increment' onClick={this._onClickIncrement}>click me!</button>
+    </div>
   }
 }
 
-const mapStateToProps = (state: Types.Store, props: ICounterProps) => state.counter;
+const mapStateToProps = (state: { counter: { value: number } }, props: {}): { value: number } => state.counter
 
-export default connect(mapStateToProps, mapDispatchToProps)(Counter);
+const mapDispatchToProps = (dispatch: redux.Dispatch<{ counter: { value: number } }>): IConnectedDispatch => ({
+  increment: (n: number) => {
+    dispatch(incrementCounter(n))
+  },
+})
+
+export const Counter: React.ComponentClass<{}> = connect(mapStateToProps, mapDispatchToProps)(CounterComponent);

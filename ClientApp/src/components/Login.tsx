@@ -72,7 +72,6 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
       }).then((r: any) => {
         this.props.history.push('/counter');
       }, (e: any) => {
-        console.log(e);
         this.setState({ errorMessage: e.message, openSnack: true });
       });
     } catch (ex) {

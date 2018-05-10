@@ -3,14 +3,8 @@ declare namespace Types {
     location: string | null;
   }
 
-  type Counter = {
-    count: number;
-    increment: any;
-    decrement: any;
-  }
-
-  export type Store = {
-    counter: Counter,
-    routing: Routing;
-  }
+  // export type Store = {
+  //   counter: { value: number },
+  //   routing: Routing;
+  // }
 }

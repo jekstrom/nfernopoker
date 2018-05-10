@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route } from 'react-router';
-import Counter from './components/Counter';
+import * as Counter from './components/Counter';
 import LoginScreen from './components/LoginScreen';
 import Layout from './components/Layout';
 
@@ -9,7 +9,7 @@ export default class App extends React.Component {
     return (
       <Layout>
         <Route exact={true} path='/' component={LoginScreen} />
-        <Route path='/counter' component={Counter} />
+        <Route path='/counter' component={Counter.Counter} />
       </Layout>
     );
   }

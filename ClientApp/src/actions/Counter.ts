@@ -1,13 +1,21 @@
 export class CountTypes {
-    public static readonly IncrementCountType = 'INCREMENT_COUNT';
-    public static readonly DecrementCountType = 'DECREMENT_COUNT';
+  public static readonly IncrementCountType = 'INCREMENT_COUNTER';
+  public static readonly ResetCounterType = 'RESET_COUNTER';
+  public static readonly DecrementCountType = 'DECREMENT_COUNT';
 }
 
-export const mapDispatchToProps = (dispatch: any) => ({
-    increment: () => {
-        dispatch({ type: CountTypes.IncrementCountType });
-    },
-    decrement: () => {
-        dispatch({ type: CountTypes.DecrementCountType });
-    },
-});
+export type Action = {
+  type: "INCREMENT_COUNTER",
+  delta: number,
+} | {
+    type: "RESET_COUNTER",
+  }
+
+export const incrementCounter = (delta: number): Action => ({
+  type: CountTypes.IncrementCountType,
+  delta,
+})
+
+export const resetCounter = (): Action => ({
+  type: CountTypes.ResetCounterType,
+})
