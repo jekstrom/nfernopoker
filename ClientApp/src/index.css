@@ -8,3 +8,7 @@ body {
     padding-top: 50px;
   }
 }
+
+a, a:hover, a:active, a:visited {
+	text-decoration: none;
+}
