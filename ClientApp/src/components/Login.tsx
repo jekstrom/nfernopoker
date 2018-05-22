@@ -1,7 +1,8 @@
 import * as React from "react";
 import { Button, TextField, CardContent, CardActions, Typography } from 'material-ui';
 import { Component, MouseEvent, ChangeEvent } from "react";
-import { RouteComponentProps } from "react-router";
+import { compose } from "redux";
+import { RouteComponentProps, withRouter } from "react-router";
 import { withFirebase } from "react-redux-firebase";
 
 interface ILoginProps {
@@ -61,7 +62,7 @@ class LoginComponent extends Component<IProps, ILoginState> {
 					/>
 				</CardContent>
 				<CardActions>
-					<Button className={this.props.classes.button} onClick={this.login} variant="raised" style={{marginLeft: '16px'}} title="Login" color="primary">Login</Button>
+					<Button className={this.props.classes.button} onClick={this.login} variant="raised" style={{ marginLeft: '16px' }} title="Login" color="primary">Login</Button>
 					<Button onClick={this.props.onSecondaryButton} size="small">
 						{this.props.secondaryButtonText}
 					</Button>
@@ -97,4 +98,7 @@ class LoginComponent extends Component<IProps, ILoginState> {
 	}
 }
 
-export const Login: React.ComponentClass<ILoginProps> = withFirebase(LoginComponent)
+export const Login: React.ComponentClass<ILoginProps> = compose<React.ComponentClass<ILoginProps>>(
+	withFirebase,
+	withRouter,
+)(LoginComponent)
