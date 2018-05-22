@@ -59,7 +59,7 @@ class RegisterComponent extends Component<IProps, ILocalState> {
 			this.props.sendMessage(e.message);
 		}).catch((ex: any) => this.props.sendMessage(ex.message));
 	}
-	
+
 	public render() {
 		return (
 			<React.Fragment>
@@ -99,7 +99,7 @@ class RegisterComponent extends Component<IProps, ILocalState> {
 					/>
 				</CardContent>
 				<CardActions>
-					<Button className={this.props.classes.button} variant="raised" style={{marginLeft: '16px'}} title="Register" color="primary" onClick={this.handleSubmit}>
+					<Button className={this.props.classes.button} variant="raised" style={{ marginLeft: '16px' }} title="Register" color="primary" onClick={this.handleSubmit}>
 						Register
 					</Button>
 					<Button onClick={this.props.onSecondaryButton} size="small">
