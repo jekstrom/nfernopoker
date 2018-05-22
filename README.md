@@ -1,3 +1,6 @@
+# Moved to https://github.com/duluth-dnug/nfernopoker
+
+
 # nfernopoker
 # Brainstorming
 
