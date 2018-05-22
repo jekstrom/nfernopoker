@@ -1,13 +1,12 @@
-body{
-	margin: 0px;
+body {
+  margin: 0px;
 }
 
 @media (max-width: 767px) {
-	/* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
-	body {
-		padding-top: 50px;
-	}
-
+  /* On small screens, the nav menu spans the full width of the screen. Leave a space for it. */
+  body {
+    padding-top: 50px;
+  }
 }
 
 a, a:hover, a:active, a:visited {

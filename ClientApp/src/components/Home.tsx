@@ -4,12 +4,12 @@ import { withFirebase } from 'react-redux-firebase';
 
 class Home extends React.Component<any, any> {
   constructor(props: any) {
-      super(props);
-      this.state= {
-          email: '',
-          password: '',
-          username: '',
-      }
+    super(props);
+    this.state = {
+      email: '',
+      password: '',
+      username: '',
+    }
   };
 
   public render() {
@@ -19,15 +19,15 @@ class Home extends React.Component<any, any> {
         this.state.password
       );
       this.props.firebase
-      .auth()
-      .signInWithCredential(credential)
-      .then((user: any) => console.log(user));
+        .auth()
+        .signInWithCredential(credential)
+        .then((user: any) => console.log(user));
     };
     return (
       <div>
         <h1>Login</h1>
-        <input type="text" value={this.state.email} placeholder="email@example.com" onChange={evt => this.updateEmail(evt)}/>
-        <input type="password" value={this.state.password}  onChange={evt => this.updatePassword(evt)}/>
+        <input type="text" value={this.state.email} placeholder="email@example.com" onChange={evt => this.updateEmail(evt)} />
+        <input type="password" value={this.state.password} onChange={evt => this.updatePassword(evt)} />
         <button onClick={login}>Login</button>
       </div>
     );
@@ -35,20 +35,20 @@ class Home extends React.Component<any, any> {
   updateEmail(evt: any) {
     console.log(evt.target.value);
     this.setState({
-        email: evt.target.value
+      email: evt.target.value
     });
   }
   updatePassword(evt: any) {
-      console.log(evt.target.value);
-      this.setState({
-          password: evt.target.value
-      });
+    console.log(evt.target.value);
+    this.setState({
+      password: evt.target.value
+    });
   }
   updateUsername(evt: any) {
-      console.log(evt.target.value);
-      this.setState({
-          username: evt.target.value
-      });
+    console.log(evt.target.value);
+    this.setState({
+      username: evt.target.value
+    });
   }
 }
 
