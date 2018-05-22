@@ -1,16 +1,11 @@
-import * as React from "react";
-import { Component, MouseEvent } from 'react';
-import Button from 'material-ui/Button';
-import Login from './Login';
-import Register from './Register';
-import { Grid, withStyles } from "material-ui";
-import { firebaseConnect } from "react-redux-firebase";
+﻿﻿import * as React from "react";
+import { Component } from 'react';
+import { Login } from './Login';
+import { Register } from './Register';
+import { Grid, withStyles, Card } from "material-ui";
 import { withRouter, RouteComponentProps } from "react-router";
 
 interface ILoginScreenState {
-  buttonLabel: string;
-  loginScreen: Array<any>;
-  loginMessage: string;
   isLogin: boolean;
 }
 
@@ -21,22 +16,19 @@ interface ILoginScreenProps {
 }
 
 const styles: any = (theme: any) => ({
-  button: { margin: 15 },
+  button: { margin: theme.spacing.unit },
   close: {
     width: theme.spacing.unit * 4,
     height: theme.spacing.unit * 4,
   },
   login: {
     minWidth: "300px",
-    backgroundColor: theme.palette.background.default,
-    padding: "10px"
   },
   root: {
     height: "100%"
   }
 });
 
-@firebaseConnect()
 class LoginScreen extends Component<ILoginScreenProps & RouteComponentProps<any>, ILoginScreenState> {
 
   public state: ILoginScreenState;
@@ -45,58 +37,30 @@ class LoginScreen extends Component<ILoginScreenProps & RouteComponentProps<any>
     public props: ILoginScreenProps & RouteComponentProps<any>
   ) {
     super(props);
-    this.state = { loginMessage: "", loginScreen: [], buttonLabel: "Register", isLogin: true };
+    this.state = { isLogin: true };
   }
-
-  public componentWillMount() {
-    let loginscreen = [<Login {...this.props} key={1} />];
-    let loginmessage = "Not registered yet, Register Now";
-    this.setState({
-      loginScreen: loginscreen,
-      loginMessage: loginmessage
-    });
-  }
-
-  public onBtnClick = (event: any) => this.handleClick(event);
 
   public render() {
+    const loginScreen =
+      this.state.isLogin ?
+        <Register classes={this.props.classes} secondaryButtonText='Log in instead' onSecondaryButton={this.toggleState} /> :
+        <Login classes={this.props.classes} secondaryButtonText='No account?' onSecondaryButton={this.toggleState} />
     return (
       <Grid className={this.props.classes.root} container={true} alignItems="center" alignContent="center" justify="center" direction="row">
         <Grid item={true} className={this.props.classes.login}>
-          {this.state.loginScreen}
-          <div>
-            {this.state.loginMessage}
-          </div>
-          <Button variant="raised" type="Submit" color="secondary" className={this.props.classes.button} onClick={this.onBtnClick}>
-            {this.state.buttonLabel}
-          </Button>
+          <Card>
+            {loginScreen}
+          </Card>
         </Grid>
       </Grid>
     );
   }
 
-  public handleClick(event: MouseEvent<any>) {
-    let loginmessage: string;
-    if (this.state.isLogin) {
-      let loginscreen = [<Register {...this.props} key={2} />];
-      loginmessage = "Already registered. Go to Login";
-      this.setState({
-        loginScreen: loginscreen,
-        loginMessage: loginmessage,
-        buttonLabel: "Login",
-        isLogin: false
-      })
-    }
-    else {
-      let loginscreen = [<Login {...this.props} key={3} />];
-      loginmessage = "Not Registered yet. Go to registration";
-      this.setState({
-        loginScreen: loginscreen,
-        loginMessage: loginmessage,
-        buttonLabel: "Register",
-        isLogin: true
-      })
-    }
+  private toggleState = () => {
+    const newState = {
+      isLogin: !this.state.isLogin
+    };
+    this.setState(newState);
   }
 
 }

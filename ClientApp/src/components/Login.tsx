@@ -1,64 +1,73 @@
 import * as React from "react";
-import { Button, TextField } from 'material-ui';
+import { Button, TextField, CardContent, CardActions, Typography } from 'material-ui';
 import { Component, MouseEvent, ChangeEvent } from "react";
-import SnackWrapper from "./SnackWrapper";
-import { RouteComponentProps } from "react-router";
+import { compose } from "redux";
+import { RouteComponentProps, withRouter } from "react-router";
+import { withFirebase } from "react-redux-firebase";
 
-export interface ILoginProps {
+interface ILoginProps {
   classes: any;
-  firebase: any;
+  secondaryButtonText: string;
+  onSecondaryButton: () => void;
 }
-
-export interface ILoginState {
+interface ILoginState {
   username: string;
   password: string;
   errorMessage: string;
-  openSnack: boolean;
 }
+interface IFirebase {
+  firebase: any;
+}
+type IProps = ILoginProps & IFirebase & RouteComponentProps<any>;
 
-export default class Login extends Component<ILoginProps & RouteComponentProps<any>, ILoginState> {
+class LoginComponent extends Component<IProps, ILoginState> {
+
+  public state: ILoginState
 
   constructor(
-    public props: ILoginProps & RouteComponentProps<any>,
-    public state: ILoginState
+    public props: IProps,
   ) {
     super(props);
+    this.state = { username: "", password: "", errorMessage: "" };
   }
 
   public storeUser = (event: ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value });
   public storePwrd = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
 
-  public closeSnack = () => {
-    this.setState({ errorMessage: "", openSnack: false });
+  public handleClose = (event: MouseEvent<HTMLElement>) => {
+    this.setState({ errorMessage: "" });
   }
 
   public render() {
     return (
-      <form className={this.props.classes.login} onSubmit={this.login}>
-        <TextField
-          id="username"
-          fullWidth={true}
-          helperText="Enter your Username"
-          label="Username"
-          onChange={this.storeUser}
-        />
-        <br />
-        <TextField
-          id="pword"
-          fullWidth={true}
-          type="password"
-          helperText="Enter your Password"
-          label="Password"
-          onChange={this.storePwrd}
-        />
-
-        <br />
-
-        <Button className={this.props.classes.button} variant="raised" title="Submit" type="submit" color="primary">Submit</Button>
-
-        <SnackWrapper message={this.state.errorMessage} classes={this.props.classes} open={this.state.openSnack} handleClose={this.closeSnack} />
-
-      </form>
+      <React.Fragment>
+        <CardContent>
+          <Typography className={this.props.classes.title} color="textSecondary">
+            Log in to feel the burn
+          </Typography>
+          <TextField
+            id="username"
+            fullWidth={true}
+            label="Email"
+            onChange={this.storeUser}
+            className={this.props.classes.button}
+          />
+          <TextField
+            id="pword"
+            fullWidth={true}
+            type="password"
+            label="Password"
+            onChange={this.storePwrd}
+            className={this.props.classes.button}
+          />
+        </CardContent>
+        <CardActions>
+          <Button className={this.props.classes.button} onClick={this.login} variant="raised" style={{ marginLeft: '16px' }} title="Login" color="primary">Login</Button>
+          <Button onClick={this.props.onSecondaryButton} size="small">
+            {this.props.secondaryButtonText}
+          </Button>
+        </CardActions>
+      </React.Fragment>
     );
   }
 
@@ -73,18 +82,23 @@ export default class Login extends Component<ILoginProps & RouteComponentProps<a
         this.props.history.push('/counter');
       }, (e: any) => {
         console.log(e);
-        this.setState({ errorMessage: e.message, openSnack: true });
+        this.setState({ errorMessage: e.message });
       });
     } catch (ex) {
       if (ex.message == 'signInWithEmailAndPassword failed: First argument "email" must be a valid string.') {
-        this.setState({ errorMessage: "Email: must be a valid string.", openSnack: true });
+        this.setState({ errorMessage: "Email: must be a valid string." });
         return;
       }
       if (ex.message == 'signInWithEmailAndPassword failed: Second argument "password" must be a valid string.') {
-        this.setState({ errorMessage: "Password: must be a valid string.", openSnack: true });
+        this.setState({ errorMessage: "Password: must be a valid string." });
         return;
       }
-      this.setState({ errorMessage: ex.message, openSnack: true });
+      this.setState({ errorMessage: ex.message });
     }
   }
 }
+
+export const Login: React.ComponentClass<ILoginProps> = compose<React.ComponentClass<ILoginProps>>(
+  withFirebase,
+  withRouter,
+)(LoginComponent)
