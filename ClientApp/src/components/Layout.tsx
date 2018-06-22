@@ -35,10 +35,10 @@ const styles: any = (theme: any) => ({
   root: {
     display: 'grid',
     grid: `
-			[navrow-start] "appbar appbar" 64px [navrow-end]
-			[mainrow-start] "drawer main" calc(100vh - 64px) [mainrow-end]
-			/ 256px 1fr
-		`,
+      [navrow-start] "appbar appbar" 64px [navrow-end]
+      [mainrow-start] "drawer main" calc(100vh - 64px) [mainrow-end]
+      / 256px 1fr
+    `,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
@@ -112,9 +112,10 @@ class Layout extends Component<ILayoutProps> {
               paper: this.props.classes.drawerPaper
             }}
           >
-            <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home lol</MenuItem></Link>
+            <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home</MenuItem></Link>
             <Divider />
             <Link to={'/counter'}><MenuItem selected={window.location.pathname === '/counter'}>Counter</MenuItem></Link>
+            <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
             <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
           </Drawer>
           <main className={this.props.classes.content}>
