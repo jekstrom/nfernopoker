@@ -1,16 +1,18 @@
 import * as React from "react";
-import { Card, CardMedia, CardContent, Typography, Button } from "material-ui";
+import { Card, CardMedia, CardContent, Typography, Button, TextField, CardActions } from "material-ui";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firebaseConnect, isLoaded, isEmpty } from "react-redux-firebase";
-
+import { ChangeEvent } from "react";
 
 interface IOwnProps {
   firebase: any;
+  profile: any;
   teams: Array<Team>;
 }
 
 interface ITempState {
+  playerEmail: string;
   team: Team;
 }
 
@@ -23,7 +25,6 @@ interface Team {
 }
 
 interface Player {
-  name: string;
   email: string;
 }
 
@@ -70,24 +71,120 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
 
   constructor(props: IProps) {
     super(props);
-
+    this.state = {
+      playerEmail: "",
+      team: {
+        owner: "",
+        ownerEmail: "",
+        logoUrl: "",
+        name: "",
+        players: []
+      }
+    };
   }
 
-  addItem() {
-    this.props.firebase.push('teams', {
-      name: "Giant Rodents",
-      owner: "Todd Boss",
-      ownerEmail: "tboss@boss.com",
-      logoUrl: "http://www.wideopenspaces.com/wp-content/uploads/2014/10/ugly1.jpg",
-      players: [
-        { name: 'Sam', email: "sam@samantha.com" },
-        { name: 'Sue', email: "sue@suzy.com" }
-      ]
-    });
-    console.log("Added team Item");
+  storeName = (event: ChangeEvent<HTMLInputElement>) => {
+    let team = Object.assign(this.state.team);
+    team.name = event.target.value;
+    team.owner = `${this.props.profile.firstName} ${this.props.profile.lastName}`;
+    team.ownerEmail = this.props.profile.email;
+    this.setState({ team });
+  }
+
+  storeLogoUrl = (event: ChangeEvent<HTMLInputElement>) => {
+    let team = Object.assign(this.state.team);
+    team.logoUrl = event.target.value;
+    this.setState({ team });
+  }
+
+  storePlayerEmail = (event: ChangeEvent<HTMLInputElement>) => {
+    this.setState({ playerEmail: event.target.value });
+  }
+
+  removeItem(key: string) {
+    this.props.firebase.remove(`/teams/${key}`)
+  }
+
+  addPlayer() {
+    let team = Object.assign(this.state.team);
+    team.players.push({ email: this.state.playerEmail });
+    this.setState({ team: team, playerEmail: "" });
+  }
+
+  removePlayer(player: Player) {
+    let team: Team = Object.assign(this.state.team);
+    team.players = team.players.filter(p => p.email !== player.email);
+    this.setState({ team });
+  }
+
+  createTeam() {
+    this.props.firebase.push('teams', this.state.team);
+    this.state.team = {
+      owner: "",
+      ownerEmail: "",
+      logoUrl: "",
+      name: "",
+      players: []
+    };
   }
 
   render() {
+
+    let teamInput = (
+      <React.Fragment>
+        <CardContent>
+          <Typography color="textSecondary">
+            Enter new team information below.
+          </Typography>
+          <TextField
+            id="name"
+            fullWidth={true}
+            label="Name"
+            onChange={this.storeName}
+          />
+          <TextField
+            id="logoUrl"
+            fullWidth={true}
+            label="Logo URL"
+            onChange={this.storeLogoUrl}
+          />
+
+          <br />
+
+          <TextField
+            id="teamPlayer"
+            fullWidth={false}
+            value={this.state.playerEmail}
+            label="Team Player Email Address"
+            onChange={this.storePlayerEmail}
+          />
+
+          <Button color="primary" style={styles.button} onClick={() => this.addPlayer()}>
+            Add Player
+          </Button>
+
+          <ul>
+            {
+              this.state.team.players.map(player => {
+                return <li key={player.email}>
+                  {player.email}
+                  <Button color="primary" onClick={() => this.removePlayer(player)}>
+                    X
+                  </Button>
+                </li>
+              })
+            }
+          </ul>
+        </CardContent>
+
+        <CardActions>
+          <Button color="primary" style={styles.button} onClick={() => this.createTeam()}>
+            Add Team
+          </Button>
+        </CardActions>
+
+      </React.Fragment>
+    );
 
     if (!isLoaded(this.props.teams)) {
       return <p>Loading... </p>
@@ -96,19 +193,18 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
     let cards = new Array<any>();
     if (!isEmpty(this.props.teams) && isLoaded(this.props.teams)) {
       cards = Object.keys(this.props.teams).map((key, index) => {
-        let t = this.props.teams[key];
-        console.log(key);
-        return <Card key={t.name} style={styles.card}>
+        let team = this.props.teams[key];
+        return <Card key={team.name} style={styles.card}>
           <CardMedia component="img"
             style={styles.image}
-            src={t.logoUrl}
+            src={team.logoUrl}
           />
           <CardContent>
             <Typography gutterBottom={true}>
-              {t.name} - owner: {t.owner}
+              {team.name} - owner: {team.owner}
             </Typography>
-            <Button color="secondary">
-              Edit
+            <Button color="secondary" onClick={() => this.removeItem(key)}>
+              Delete
           </Button>
           </CardContent>
         </Card>
@@ -116,9 +212,10 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
     }
 
     return <div style={styles.layout}>
-      <Button color="primary" style={styles.button} onClick={() => this.addItem()}>
-        Add
-      </Button>
+      <section>
+        {teamInput}
+      </section>
+
       <section style={styles.issuecontainer} />
       <section style={styles.cardcontainer} >
         {cards}
@@ -129,9 +226,10 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
 
 export const TeamsScreen: React.ComponentClass<ITempState> = compose<React.ComponentClass<ITempState>>(
   firebaseConnect((props: IProps) => [
-    'teams'
+    'teams',
   ]),
   connect((state: any) => ({
-    teams: state.firebase.data.teams
+    teams: state.firebase.data.teams,
+    profile: state.firebase.profile
   })
   ))(TeamsScreenComponent)
