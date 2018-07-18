@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardMedia, CardContent, Typography, Button, TextField, CardActions } from "material-ui";
+import { Card, CardMedia, CardContent, Typography, Button, TextField, CardActions, Modal } from "material-ui";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firebaseConnect, isLoaded, isEmpty } from "react-redux-firebase";
@@ -12,6 +12,7 @@ interface IOwnProps {
 }
 
 interface ITempState {
+  modalOpen: boolean;
   playerEmail: string;
   team: Team;
 }
@@ -62,6 +63,14 @@ const styles = {
   },
   image: {
     height: 200,
+  },
+  modal: {
+    height: '600px',
+    left: '50%',
+    top: '10em'
+  },
+  modalcontent: {
+    backgroundColor: 'white'
   }
 }
 
@@ -72,6 +81,7 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
   constructor(props: IProps) {
     super(props);
     this.state = {
+      modalOpen: false,
       playerEmail: "",
       team: {
         owner: "",
@@ -117,15 +127,26 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
     this.setState({ team });
   }
 
+  handleModalOpen() {
+    this.setState({ modalOpen: true });
+  }
+
+  handleModalClose() {
+    this.setState({ modalOpen: false });
+  }
+
   createTeam() {
     this.props.firebase.push('teams', this.state.team);
-    this.state.team = {
-      owner: "",
-      ownerEmail: "",
-      logoUrl: "",
-      name: "",
-      players: []
-    };
+    this.setState({
+      team: {
+        owner: "",
+        ownerEmail: "",
+        logoUrl: "",
+        name: "",
+        players: []
+      },
+      modalOpen: false
+    })
   }
 
   render() {
@@ -151,15 +172,16 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
 
           <br />
 
+          <Typography> Add Players to Team </Typography>
           <TextField
             id="teamPlayer"
             fullWidth={false}
             value={this.state.playerEmail}
-            label="Team Player Email Address"
+            label="Player Email Address"
             onChange={this.storePlayerEmail}
           />
 
-          <Button color="primary" style={styles.button} onClick={() => this.addPlayer()}>
+          <Button color="secondary" onClick={() => this.addPlayer()}>
             Add Player
           </Button>
 
@@ -179,7 +201,7 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
 
         <CardActions>
           <Button color="primary" style={styles.button} onClick={() => this.createTeam()}>
-            Add Team
+            Save Team
           </Button>
         </CardActions>
 
@@ -213,13 +235,26 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
 
     return <div style={styles.layout}>
       <section>
-        {teamInput}
+        <Button color="primary" style={styles.button} onClick={() => this.handleModalOpen()}>
+          New Team
+        </Button>
       </section>
 
       <section style={styles.issuecontainer} />
       <section style={styles.cardcontainer} >
         {cards}
       </section>
+
+      <Modal
+        style={styles.modal}
+        open={this.state.modalOpen}
+        onClose={() => this.handleModalClose()}
+      >
+        <section style={styles.modalcontent}>
+          {teamInput}
+        </section>
+      </Modal>
+
     </div>
   }
 }
