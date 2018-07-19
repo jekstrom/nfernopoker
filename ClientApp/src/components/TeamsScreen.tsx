@@ -12,6 +12,7 @@ interface IOwnProps {
 }
 
 interface ITempState {
+  teamRef: any;
   modalOpen: boolean;
   playerEmail: string;
   team: Team;
@@ -82,6 +83,7 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
     super(props);
     this.state = {
       modalOpen: false,
+      teamRef: null,
       playerEmail: "",
       team: {
         owner: "",
@@ -128,15 +130,23 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
   }
 
   handleModalOpen() {
-    this.setState({ modalOpen: true });
+    this.setState({ modalOpen: true, teamRef: null });
   }
 
   handleModalClose() {
     this.setState({ modalOpen: false });
   }
 
-  createTeam() {
-    this.props.firebase.push('teams', this.state.team);
+  openEditTeam(key: string) {
+    this.setState({ modalOpen: true, team: this.props.teams[key], teamRef: this.props.firebase.ref(`/teams/${key}`) });
+  }
+
+  saveTeam() {
+    if (this.state.teamRef) {
+      this.state.teamRef.update(this.state.team);
+    } else {
+      this.props.firebase.push('teams', this.state.team);
+    }
     this.setState({
       team: {
         owner: "",
@@ -146,11 +156,10 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
         players: []
       },
       modalOpen: false
-    })
+    });
   }
 
   render() {
-
     let teamInput = (
       <React.Fragment>
         <CardContent>
@@ -160,12 +169,14 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
           <TextField
             id="name"
             fullWidth={true}
+            value={this.state.team.name}
             label="Name"
             onChange={this.storeName}
           />
           <TextField
             id="logoUrl"
             fullWidth={true}
+            value={this.state.team.logoUrl}
             label="Logo URL"
             onChange={this.storeLogoUrl}
           />
@@ -200,7 +211,7 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
         </CardContent>
 
         <CardActions>
-          <Button color="primary" style={styles.button} onClick={() => this.createTeam()}>
+          <Button color="primary" style={styles.button} onClick={() => this.saveTeam()}>
             Save Team
           </Button>
         </CardActions>
@@ -225,6 +236,9 @@ class TeamsScreenComponent extends React.Component<IProps, ITempState> {
             <Typography gutterBottom={true}>
               {team.name} - owner: {team.owner}
             </Typography>
+            <Button color="secondary" onClick={() => this.openEditTeam(key)}>
+              Edit
+          </Button>
             <Button color="secondary" onClick={() => this.removeItem(key)}>
               Delete
           </Button>
