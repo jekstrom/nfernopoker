@@ -114,7 +114,6 @@ class Layout extends Component<ILayoutProps> {
           >
             <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home</MenuItem></Link>
             <Divider />
-            <Link to={'/counter'}><MenuItem selected={window.location.pathname === '/counter'}>Counter</MenuItem></Link>
             <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
             <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
           </Drawer>
