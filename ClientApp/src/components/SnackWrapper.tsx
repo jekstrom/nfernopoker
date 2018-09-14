@@ -1,7 +1,7 @@
-﻿import * as React from "react";
+import * as React from "react";
 import * as redux from 'redux';
 import { Component } from 'react';
-import { Snackbar, IconButton } from "material-ui";
+import { Snackbar, IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { connect } from "react-redux";
 import { MessageTypes } from "../actions/Message";
@@ -26,9 +26,6 @@ class SnackWrapperComponent extends Component<IProps, {}> {
       <Snackbar
         open={this.props.open}
         autoHideDuration={5000}
-        SnackbarContentProps={{
-          'aria-describedby': 'message-id',
-        }}
         action={[
           <IconButton
             key="close"

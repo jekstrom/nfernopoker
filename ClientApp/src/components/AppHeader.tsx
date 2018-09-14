@@ -1,29 +1,35 @@
 import * as React from "react";
-import AppBar from 'material-ui/AppBar';
-import Toolbar from 'material-ui/Toolbar';
-import Typography from 'material-ui/Typography';
-import { Component, MouseEvent } from "react";
+import { Link } from 'react-router-dom';
+import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
 import { AccountCircle } from '@material-ui/icons';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
-import { IconButton, Button } from 'material-ui';
-import { Link } from 'react-router-dom';
+import { compose } from "redux";
+import { connect } from "react-redux";
 
-@firebaseConnect()
-export default class AppHeader extends Component {
+const styles = {
+  appBar: {
+    zIndex: 5,
+    gridArea: 'appbar'
+  },
+  appTitle: {
+    flex: 1
+  }
+};
 
-  constructor(
-    public props: any
-  ) {
+class AppHeaderComponent extends React.Component<any, any> {
+
+  constructor(props: any) {
     super(props);
   }
 
-  public render() {
+  render() {
     let title = "N-Ferno Poker";
 
     return (
-      <AppBar position="absolute" className={this.props.classes.appBar}>
+      <AppBar position="absolute" style={styles.appBar}>
         <Toolbar>
-          <Typography className={this.props.classes.appTitle} variant="title" color="inherit" noWrap={true}>
+          <Typography style={styles.appTitle} variant="title" color="inherit" noWrap={true}>
             {title}
           </Typography>
           {
@@ -48,8 +54,24 @@ export default class AppHeader extends Component {
     );
   }
 
-  public logout = (event: MouseEvent<HTMLElement>) => {
+  public logout = () => {
     this.props.firebase.logout();
   };
 
 }
+
+
+export default compose<React.ComponentClass<any>>(
+  firebaseConnect((props: any) => {
+    return [
+      'auth',
+      'profile'
+    ]
+  }),
+  connect(
+    (state: any) => ({
+      auth: state.firebase.auth,
+      profile: state.firebase.profile
+    })
+  )
+)(AppHeaderComponent)
