@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardMedia, CardContent, Typography } from "material-ui";
+import { Card, CardMedia, CardContent, Typography } from "@material-ui/core";
 
 interface IOwnProps { }
 interface ITempState {

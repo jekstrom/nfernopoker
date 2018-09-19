@@ -1,8 +1,8 @@
-﻿﻿import * as React from "react";
+﻿import * as React from "react";
 import { Component } from 'react';
 import { Login } from './Login';
 import { Register } from './Register';
-import { Grid, withStyles, Card } from "material-ui";
+import { Grid, withStyles, Card } from "@material-ui/core";
 import { withRouter, RouteComponentProps } from "react-router";
 
 interface ILoginScreenState {

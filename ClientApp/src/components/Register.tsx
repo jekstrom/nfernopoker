@@ -1,7 +1,7 @@
-﻿﻿import * as React from "react";
+import * as React from "react";
 import * as redux from "redux";
 import { Component, MouseEvent, ChangeEvent } from 'react';
-import { Button, TextField, CardContent, CardActions, Typography } from 'material-ui';
+import { Button, TextField, CardContent, CardActions, Typography } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
 import { MessageTypes } from "../actions/Message";

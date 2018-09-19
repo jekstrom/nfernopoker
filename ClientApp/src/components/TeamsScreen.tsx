@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Card, CardMedia, CardContent, Typography, Button, TextField, CardActions, Modal } from "material-ui";
+import { Card, CardMedia, CardContent, Typography, Button, TextField, CardActions, Modal } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firebaseConnect, isLoaded, isEmpty } from "react-redux-firebase";

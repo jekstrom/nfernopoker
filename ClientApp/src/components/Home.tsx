@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { withFirebase } from 'react-redux-firebase';
 
 class Home extends React.Component<any, any> {
+
   constructor(props: any) {
     super(props);
     this.state = {
