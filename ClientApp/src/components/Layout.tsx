@@ -80,7 +80,9 @@ class Layout extends Component<ILayoutProps> {
             <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home</MenuItem></Link>
             <Divider />
             <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
+            <Link to={'/game/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
             <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
+            <Link to={'/games'}><MenuItem selected={window.location.pathname === '/games'}>All Games</MenuItem></Link>
           </Drawer>
           <main className={this.props.classes.content}>
             {this.props.children}
