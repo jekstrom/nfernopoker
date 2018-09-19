@@ -10,12 +10,12 @@ const styles: any = (theme: any) => ({
   container: {
     display: 'flex',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default
+    backgroundColor: theme.palette.background.default,
+    margin: theme.spacing.unit
   },
   textField: {
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
-    width: 200,
   },
   button: {
     background: 'white',
@@ -56,7 +56,7 @@ class NewGameComponent extends React.Component<any, any> {
       newState.game.team = this.props.teams[event.target.value];
       newState.selectedTeam = event.target.value;
     } else if (name == "cards") {
-      newState.game.selectedCardDeck = event.target.value;
+      newState.selectedCardDeck = event.target.value;
       newState.game.cards = this.cardOptions.find(x => x.name == event.target.value);
     }
     else {
@@ -71,7 +71,7 @@ class NewGameComponent extends React.Component<any, any> {
   }
 
   render() {
-    let classes = this.props;
+    let classes = this.props.classes;
     let teams = this.props.teams;
 
     if (!teams || teams.length < 1) {
@@ -119,6 +119,7 @@ class NewGameComponent extends React.Component<any, any> {
         <TextField
           id="select-team"
           select
+          fullWidth={true}
           label="Select Team"
           className={classes.textField}
           value={this.state.selectedTeam}
@@ -132,12 +133,14 @@ class NewGameComponent extends React.Component<any, any> {
             },
           }}
         >
+          <option disabled hidden value=''></option>
           {menuItems}
         </TextField>
 
         <TextField
           id="select-cards"
           select
+          fullWidth={true}
           label="Select Cards"
           className={classes.textField}
           value={this.state.selectedCardDeck}
@@ -151,6 +154,7 @@ class NewGameComponent extends React.Component<any, any> {
             },
           }}
         >
+          <option disabled hidden value=''></option>
           {cards}
         </TextField>
 
