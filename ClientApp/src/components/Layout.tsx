@@ -1,18 +1,18 @@
 import * as React from 'react';
-import { withStyles } from 'material-ui/styles';
-import Drawer from 'material-ui/Drawer';
-import Divider from 'material-ui/Divider';
-import { Link } from 'react-router-dom';
-import { MenuItem, MuiThemeProvider } from 'material-ui';
-import { createMuiTheme } from 'material-ui/styles';
-import orange from 'material-ui/colors/orange';
-import { connect } from 'react-redux'
-import { Component } from 'react';
-import { firebaseConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
+import { Divider, Drawer, MenuItem } from '@material-ui/core';
+import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/styles';
+import orange from '@material-ui/core/colors/orange';
 import AppHeader from './AppHeader';
+import { Link } from 'react-router-dom';
+
+import { connect } from 'react-redux'
+import { Component, MouseEvent } from 'react';
+import { firebaseConnect } from 'react-redux-firebase'; //isEmpty
+import { compose } from 'redux';
+import { SnackWrapper } from './SnackWrapper';
 
 export interface ILayoutProps {
+  snack: any;
   firebase: any;
   classes: any;
   children: any;
@@ -28,30 +28,29 @@ const theme = createMuiTheme({
 
 const styles: any = (theme: any) => ({
   root: {
-    flexGrow: 1,
+    display: 'grid',
+    grid: `
+      [navrow-start] "appbar appbar" 64px [navrow-end]
+      [mainrow-start] "drawer main" calc(100vh - 64px) [mainrow-end]
+      / 256px 1fr
+    `,
     zIndex: 1,
     overflow: 'hidden',
     position: 'relative',
-    display: 'flex'
-  },
-  appBar: {
-    zIndex: theme.zIndex.drawer + 1,
-  },
-  appTitle: {
-    flex: 1
   },
   drawerPaper: {
     position: 'relative',
-    width: 240,
+    minWidth: 240
   },
   content: {
-    flexGrow: 1,
     backgroundColor: theme.palette.background.default,
     backgroundImage: `url('/img/hell.jpg')`,
     padding: theme.spacing.unit * 3,
     minWidth: 0, // So the Typography noWrap works
+    filter: 'saturate(125%)',
+    gridArea: 'main'
   },
-  toolbar: theme.mixins.toolbar,
+  toolbar: theme.mixins.toolbar
 });
 
 class Layout extends Component<ILayoutProps> {
@@ -62,31 +61,34 @@ class Layout extends Component<ILayoutProps> {
     super(props)
   }
 
-  public render() {
+  logout = (event: MouseEvent<HTMLElement>) => {
+    this.props.firebase.logout();
+  };
+
+  render() {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={this.props.classes.root} >
           <AppHeader {...this.props} />
           <Drawer
             variant="permanent"
+            style={{ gridArea: 'drawer' }}
             classes={{
-              paper: this.props.classes.drawerPaper,
+              paper: this.props.classes.drawerPaper
             }}
           >
-            <div className={this.props.classes.toolbar} />
-            <MenuItem>
-              <Link to={'/'}>Home</Link>
-            </MenuItem>
+            <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home</MenuItem></Link>
             <Divider />
-            <MenuItem>
-              <Link to={'/counter'}>Counter</Link>
-            </MenuItem>
+            <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
+            <Link to={'/game/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
+            <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
+            <Link to={'/games'}><MenuItem selected={window.location.pathname === '/games'}>All Games</MenuItem></Link>
           </Drawer>
           <main className={this.props.classes.content}>
-            <div className={this.props.classes.toolbar} />
             {this.props.children}
           </main>
         </div>
+        <SnackWrapper classes={this.props.classes} />
       </MuiThemeProvider>
     );
   }
@@ -96,6 +98,7 @@ export default compose(
   withStyles(styles),
   firebaseConnect(),
   connect((state: any, props: any) => ({
+    snack: state.snack,
     firebase: props.firebase,
     auth: state.firebase.auth,
     profile: state.firebase.profile // load profile

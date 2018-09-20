@@ -1,34 +1,45 @@
 import * as React from "react";
+import * as redux from "redux";
 import { Component, MouseEvent, ChangeEvent } from 'react';
-import Button from 'material-ui/Button';
-import TextField from 'material-ui/TextField';
-import SnackWrapper from "./SnackWrapper";
-import { RouteComponentProps } from "react-router";
+import { Button, TextField, CardContent, CardActions, Typography } from '@material-ui/core';
+import { RouteComponentProps, withRouter } from "react-router";
+import { connect } from "react-redux";
+import { MessageTypes } from "../actions/Message";
+import { compose } from "redux";
+import { withFirebase } from "react-redux-firebase";
 
-export interface IRegisterProps {
-  firebase: any;
+interface ILocalProps {
   classes: any;
+  secondaryButtonText: string;
+  onSecondaryButton: () => void;
 }
-
-export interface IRegisterState {
+interface ILocalState {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
-  errorMessage: string;
-  openSnack: boolean;
 }
+interface IFirebase {
+  firebase: any;
+}
+interface IConnectedDispatch {
+  sendMessage: (message: string) => void,
+  clear: () => void
+}
+type IProps = ILocalProps & IConnectedDispatch & RouteComponentProps<any> & IFirebase;
 
-export default class Register extends Component<IRegisterProps & RouteComponentProps<any>, IRegisterState> {
-
+class RegisterComponent extends Component<IProps, ILocalState> {
   constructor(
-    public props: IRegisterProps & RouteComponentProps<any>,
-    public state: IRegisterState
+    public props: IProps
   ) {
     super(props);
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      password: ''
+    };
   }
-
-  private _style = { margin: 15 };
 
   public setFirst = (event: ChangeEvent<HTMLInputElement>) => this.setState({ firstName: event.target.value });
   public setLast = (event: ChangeEvent<HTMLInputElement>) => this.setState({ lastName: event.target.value });
@@ -39,70 +50,78 @@ export default class Register extends Component<IRegisterProps & RouteComponentP
   public handleClick = (event: MouseEvent<HTMLInputElement>) => {
     event.preventDefault();
     event.stopPropagation();
-    try {
-      this.props.firebase.createUser(
-        { email: this.state.email, password: this.state.password },
-        { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
-      ).then((r: any) => {
-        this.props.history.push('/counter');
-      }, (e: any) => {
-        this.setState({ errorMessage: e.message, openSnack: true });
-      });
-    } catch (ex) {
-      this.setState({ errorMessage: ex.message, openSnack: true });
-    }
+    this.props.firebase.createUser(
+      { email: this.state.email, password: this.state.password },
+      { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
+    ).then((r: any) => {
+      this.props.history.push('/counter');
+    }, (e: any) => {
+      this.props.sendMessage(e.message);
+    }).catch((ex: any) => this.props.sendMessage(ex.message));
   }
 
-  public closeSnack = () => {
-    this.setState({ errorMessage: "", openSnack: false });
-  }
-
-  //TODO: Look into using SnackWrapper with state and only having one instance of the component.
   public render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <TextField
-          required={true}
-          fullWidth={true}
-          helperText="Enter your First Name"
-          label="First Name"
-          onChange={this.setFirst}
-        />
-        <br />
-        <TextField
-          required={true}
-          fullWidth={true}
-          helperText="Enter your Last Name"
-          label="Last Name"
-          onChange={this.setLast}
-        />
-        <br />
-        <TextField
-          required={true}
-          fullWidth={true}
-          helperText="Enter your Email"
-          type="email"
-          label="Email"
-          onChange={this.setEmail}
-        />
-        <br />
-        <TextField
-          required={true}
-          fullWidth={true}
-          type="password"
-          helperText="Enter your Password"
-          label="Password"
-          onChange={this.setPassword}
-        />
-        <br />
-        <Button variant="raised" type="submit" style={this._style}>
-          Submit
-        </Button>
-
-        <SnackWrapper message={this.state.errorMessage} classes={this.props.classes} open={this.state.openSnack} handleClose={this.closeSnack} />
-
-      </form>
+      <React.Fragment>
+        <CardContent>
+          <Typography className={this.props.classes.title} color="textSecondary">
+            Create a new account
+          </Typography>
+          <TextField
+            required={true}
+            fullWidth={true}
+            label="First Name"
+            onChange={this.setFirst}
+            className={this.props.classes.button}
+          />
+          <TextField
+            required={true}
+            fullWidth={true}
+            label="Last Name"
+            onChange={this.setLast}
+            className={this.props.classes.button}
+          />
+          <TextField
+            required={true}
+            fullWidth={true}
+            type="email"
+            label="Email"
+            onChange={this.setEmail}
+            className={this.props.classes.button}
+          />
+          <TextField
+            required={true}
+            fullWidth={true}
+            type="password"
+            label="Password"
+            onChange={this.setPassword}
+            className={this.props.classes.button}
+          />
+        </CardContent>
+        <CardActions>
+          <Button className={this.props.classes.button} variant="raised" style={{ marginLeft: '16px' }} title="Register" color="primary" onClick={this.handleSubmit}>
+            Register
+          </Button>
+          <Button onClick={this.props.onSecondaryButton} size="small">
+            {this.props.secondaryButtonText}
+          </Button>
+        </CardActions>
+      </React.Fragment>
     );
   }
-
 }
+
+const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): IConnectedDispatch => ({
+  sendMessage: (message: string) => {
+    dispatch({ type: MessageTypes.ToastMessage, payload: message });
+  },
+  clear: () => {
+    dispatch({ type: MessageTypes.ToastClearMessage });
+  }
+});
+
+export const Register: React.ComponentClass<ILocalProps> = compose<React.ComponentClass<ILocalProps>>(
+  connect(null, mapDispatchToProps),
+  withRouter,
+  withFirebase
+)(RegisterComponent)
