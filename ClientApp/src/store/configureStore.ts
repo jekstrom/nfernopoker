@@ -1,7 +1,7 @@
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import * as Counter from './Counter';
+import * as SnackMessage from './SnackMessage';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import * as firebase from "firebase";
 
@@ -34,7 +34,7 @@ export default function configureStore(history: any, initialState: any) {
   )(createStore)
 
   const reducers = {
-    counter: Counter.reducer
+    snack: SnackMessage.reducer
   };
 
   const middleware = [

@@ -9,8 +9,14 @@ declare namespace Types {
     decrement: any;
   }
 
+  type Message = {
+    open: boolean;
+    message: string;
+  }
+
   export type Store = {
-    counter: Counter,
+    counter: Counter;
+    snack: Message;
     routing: Routing;
   }
 }
