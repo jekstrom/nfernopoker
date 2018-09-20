@@ -28,8 +28,6 @@ namespace nfernopoker.Controllers
       var authorizationUrl = _tinyOAuth.GetAuthorizationUrl(requestTokenInfo.RequestToken);
 
       return Redirect(authorizationUrl);
-
-
     }
 
     [HttpGet("callback")]
