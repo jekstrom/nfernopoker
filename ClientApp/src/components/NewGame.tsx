@@ -160,7 +160,7 @@ class NewGameComponent extends React.Component<any, any> {
 
         <Button color="primary" style={styles.button} onClick={() => this.saveGame()}>
           Save Game
-          </Button>
+        </Button>
 
       </form>
     )
