@@ -82,7 +82,7 @@ class GamesScreenComponent extends React.Component<IProps, any> {
     if (!isEmpty(this.props.games) && isLoaded(this.props.games)) {
       cards = Object.keys(this.props.games).map((key, index) => {
         let game = this.props.games[key];
-        return <Card key={game.name} style={styles.card}>
+        return <Card key={index} style={styles.card}>
           <CardMedia component="img"
             style={styles.image}
             src="https://tse3.mm.bing.net/th?id=OIP.iUJC2RFnRl_JWM7TuocoUgHaJl&pid=Api"
