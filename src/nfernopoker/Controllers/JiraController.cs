@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using nfernopoker.Domain.Apis;
+using nfernopoker.Domain.Models;
 using TinyOAuth1;
 
 namespace nfernopoker.Controllers
@@ -13,6 +14,7 @@ namespace nfernopoker.Controllers
   {
     private readonly IJiraApi _jiraApi;
     private readonly ITinyOAuth _tinyOAuth;
+    private static string _oauth_token;
 
     public JiraController(IJiraApi jiraApi, ITinyOAuth tinyOAuth)
     {
@@ -31,11 +33,20 @@ namespace nfernopoker.Controllers
     }
 
     [HttpGet("callback")]
-    public IActionResult CallbackHandler(string oauth_token)
+    public async Task<IActionResult> CallbackHandler(string oauth_token)
     {
-      var isuses = _jiraApi.GetIssue("NFER-10", oauth_token);
+      var isuses = await _jiraApi.GetIssue("NFER-10", oauth_token);
+      _oauth_token = oauth_token;
 
-      return new JsonResult("test");
+      return Redirect("http://localhost:3000");
+    }
+
+    [HttpGet("issue/{id}")]
+    public async Task<IActionResult> GetIssueById(string id)
+    {
+      Issue issue = await _jiraApi.GetIssue(id, _oauth_token);
+
+      return Json(issue);
     }
   }
 }
