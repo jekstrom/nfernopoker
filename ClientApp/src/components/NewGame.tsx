@@ -5,6 +5,7 @@ import { TextField, Button } from "@material-ui/core";
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
+import SaveIcon from '@material-ui/icons/Save';
 
 const styles: any = (theme: any) => ({
   container: {
@@ -18,8 +19,17 @@ const styles: any = (theme: any) => ({
     marginRight: theme.spacing.unit,
   },
   button: {
-    background: 'white',
-    width: '100px'
+    margin: theme.spacing.unit,
+    width: '200px'
+  },
+  leftIcon: {
+    marginRight: theme.spacing.unit,
+  },
+  rightIcon: {
+    marginLeft: theme.spacing.unit,
+  },
+  iconSmall: {
+    fontSize: 20,
   },
   menu: {
     width: 200,
@@ -37,26 +47,27 @@ class NewGameComponent extends React.Component<any, any> {
     super(props);
 
     this.state = {
-      selectedTeam: "",
-      selectedCardDeck: "",
       game: {
         title: "",
         description: "",
-        team: {},
-        cards: {},
+        team: this.props.teams ? this.props.teams[0].name : "",
+        cards: this.cardOptions[0],
         stories: []
       }
     };
+
   }
 
   handleGameChange = (event: ChangeEvent<HTMLInputElement>, name: string) => {
 
     let newState = { ...this.state };
     if (name == 'team') {
-      newState.game.team = this.props.teams[event.target.value];
-      newState.selectedTeam = event.target.value;
+      //Object.keys(this.props.teams).forEach(k => {
+        //if (this.props.teams[k].name == event.target.value) {
+          newState.game.team = this.props.teams[event.target.value];
+        //}
+      //});
     } else if (name == "cards") {
-      newState.selectedCardDeck = event.target.value;
       newState.game.cards = this.cardOptions.find(x => x.name == event.target.value);
     }
     else {
@@ -70,11 +81,16 @@ class NewGameComponent extends React.Component<any, any> {
     this.props.firebase.push('games', this.state.game);
   }
 
+  isGameInvalid(): boolean {
+    let game = this.state.game;
+    return game.title == "" || game.description == "" || game.team == "" || game.cards == "";
+  }
+
   render() {
     let classes = this.props.classes;
     let teams = this.props.teams;
 
-    if (!teams || teams.length < 1) {
+    if (!teams) {
       return (<h1>Go add a team!</h1>)
     }
 
@@ -122,7 +138,7 @@ class NewGameComponent extends React.Component<any, any> {
           fullWidth={true}
           label="Select Team"
           className={classes.textField}
-          value={this.state.selectedTeam}
+          value={this.state.game.team.name}
           onChange={(e: any) => this.handleGameChange(e, 'team')}
           helperText="Please select your team"
           margin="normal"
@@ -143,7 +159,7 @@ class NewGameComponent extends React.Component<any, any> {
           fullWidth={true}
           label="Select Cards"
           className={classes.textField}
-          value={this.state.selectedCardDeck}
+          value={this.state.game.cards.name}
           onChange={(e: any) => this.handleGameChange(e, 'cards')}
           helperText="Please select your card deck"
           margin="normal"
@@ -158,8 +174,9 @@ class NewGameComponent extends React.Component<any, any> {
           {cards}
         </TextField>
 
-        <Button color="primary" style={styles.button} onClick={() => this.saveGame()}>
-          Save Game
+        <Button variant="contained" size="small" className={classes.button} disabled={this.isGameInvalid()} onClick={() => this.saveGame()}>
+          <SaveIcon className={classes.iconSmall} />
+          Save
         </Button>
 
       </form>
