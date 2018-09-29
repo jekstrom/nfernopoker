@@ -9,14 +9,10 @@ import { Component } from 'react';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase'; //isEmpty
 import { compose } from 'redux';
 import { SnackWrapper } from './SnackWrapper';
-import { withRouter } from 'react-router';
 
 export interface ILayoutProps {
-  snack: any;
-  firebase: any;
   classes: any;
   children: any;
-  profile: any;
   auth: any;
   history: any;
 }
@@ -101,12 +97,8 @@ class Layout extends Component<ILayoutProps> {
 
 export default compose(
   withStyles(styles),
-  withRouter,
   firebaseConnect(),
   connect((state: any, props: any) => ({
-    snack: state.snack,
-    firebase: props.firebase,
-    auth: state.firebase.auth,
-    profile: state.firebase.profile // load profile
+    auth: state.firebase.auth
   }))
 )(Layout);

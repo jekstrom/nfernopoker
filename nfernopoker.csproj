@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <Folder Include="ClientApp\src\core\models\" />
+    <Folder Include="ClientApp\src\scenes\" />
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

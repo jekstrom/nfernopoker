@@ -6,6 +6,7 @@ import { AccountCircle } from '@material-ui/icons';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from "redux";
 import { connect } from "react-redux";
+import { withRouter } from "react-router";
 
 const styles = {
   appBar: {
@@ -63,6 +64,7 @@ class AppHeaderComponent extends React.Component<any, any> {
 
 
 export default compose<React.ComponentClass<any>>(
+  withRouter,
   firebaseConnect((props: any) => {
     return [
       'auth',

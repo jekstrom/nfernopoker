@@ -1,31 +1,29 @@
-﻿import { MessageTypes } from '../actions/Message';
+import { MessageTypes } from '../actions/Message';
 import { AnyAction } from 'redux';
 
 const initialState = {
-  snack: {
-    message: "",
-    open: false
-  }
+  message: "",
+  open: false
 };
 
 export const reducer = (state: Types.Message, action: AnyAction) => {
   state = state || initialState;
+
   if (action.type == MessageTypes.ToastMessage) {
     return {
-      ...state, snack: {
-        message: action.payload,
-        open: true
-      }
+      ...state,
+      message: action.payload,
+      open: true
     };
   }
 
   if (action.type == MessageTypes.ToastClearMessage) {
     return {
-      ...state, snack: {
-        message: "",
-        open: false
-      }
+      ...state,
+      message: "",
+      open: false
     };
   }
+
   return state;
 };

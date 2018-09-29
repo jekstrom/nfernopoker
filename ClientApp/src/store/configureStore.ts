@@ -34,7 +34,7 @@ export default function configureStore(history: any, initialState: any) {
   )(createStore)
 
   const reducers = {
-    snack: SnackMessage.reducer
+    snacks: SnackMessage.reducer
   };
 
   const middleware = [
@@ -50,8 +50,8 @@ export default function configureStore(history: any, initialState: any) {
   }
 
   const rootReducer = combineReducers({
-    firebase: firebaseReducer,
     ...reducers,
+    firebase: firebaseReducer,
     routing: routerReducer
   });
 

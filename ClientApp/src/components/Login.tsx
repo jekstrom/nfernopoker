@@ -1,24 +1,31 @@
 import * as React from "react";
+import * as redux from 'redux';
 import { Button, TextField, CardContent, CardActions, Typography } from '@material-ui/core';
 import { Component, MouseEvent, ChangeEvent } from "react";
 import { compose } from "redux";
+import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { withFirebase } from "react-redux-firebase";
+import { MessageTypes } from "../actions/Message";
 
 interface ILoginProps {
   classes: any;
   secondaryButtonText: string;
   onSecondaryButton: () => void;
 }
+
+interface ISnackMessageProps {
+  sendMessage: (message: string) => void;
+}
+
 interface ILoginState {
   username: string;
   password: string;
-  errorMessage: string;
 }
 interface IFirebase {
   firebase: any;
 }
-type IProps = ILoginProps & IFirebase & RouteComponentProps<any>;
+type IProps = ILoginProps & ISnackMessageProps & IFirebase & RouteComponentProps<any>;
 
 class LoginComponent extends Component<IProps, ILoginState> {
 
@@ -28,7 +35,7 @@ class LoginComponent extends Component<IProps, ILoginState> {
     public props: IProps
   ) {
     super(props);
-    this.state = { username: "", password: "", errorMessage: "" };
+    this.state = { username: "", password: "" };
   }
 
   public storeUser = (event: ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value });
@@ -41,22 +48,21 @@ class LoginComponent extends Component<IProps, ILoginState> {
       this.props.firebase.login({
         email: this.state.username,
         password: this.state.password
-      }).then((r: any) => {
+      }).then(() => {
         this.props.history.push('/games');
       }, (e: any) => {
-        console.log(e);
-        this.setState({ errorMessage: e.message });
+        this.props.sendMessage(e.message);
       });
     } catch (ex) {
       if (ex.message == 'Sign in failed "Email" must be a valid string.') {
-        this.setState({ errorMessage: "Email: must be a valid string." });
+        this.props.sendMessage("Email: must be a valid string.");
         return;
       }
       if (ex.message == 'Sign in failed: "Password" must be a valid string.') {
-        this.setState({ errorMessage: "Password: must be a valid string." });
+        this.props.sendMessage("Password: must be a valid string.");
         return;
       }
-      this.setState({ errorMessage: ex.message });
+      this.props.sendMessage(ex.message);
     }
   }
 
@@ -91,15 +97,19 @@ class LoginComponent extends Component<IProps, ILoginState> {
             {this.props.secondaryButtonText}
           </Button>
         </CardActions>
-        <div>
-          <p>{this.state.errorMessage}</p>
-        </div>
       </form>
     );
   }
 }
 
+const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): any => ({
+  sendMessage: (message: string) => {
+    dispatch({ type: MessageTypes.ToastMessage, payload: message });
+  }
+});
+
 export const Login: React.ComponentClass<ILoginProps> = compose<React.ComponentClass<ILoginProps>>(
   withFirebase,
   withRouter,
+  connect(null, mapDispatchToProps)
 )(LoginComponent)
