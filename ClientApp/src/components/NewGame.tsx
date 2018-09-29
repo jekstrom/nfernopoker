@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ChangeEvent } from "react";
 import { connect } from "react-redux";
-import { TextField, Button } from "@material-ui/core";
+import { TextField, Button, Paper } from "@material-ui/core";
 import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
@@ -11,23 +11,16 @@ import { withRouter } from "react-router";
 const styles: any = (theme: any) => ({
   container: {
     display: 'flex',
+    alignItems: 'center',
     flexDirection: 'column',
-    backgroundColor: theme.palette.background.default,
     margin: theme.spacing.unit
   },
   textField: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
+    margin: theme.spacing.unit,
   },
   button: {
     margin: theme.spacing.unit,
-    width: '200px'
-  },
-  leftIcon: {
-    marginRight: theme.spacing.unit,
-  },
-  rightIcon: {
-    marginLeft: theme.spacing.unit,
+    width: '100px'
   },
   iconSmall: {
     fontSize: 20,
@@ -107,72 +100,71 @@ class NewGameComponent extends React.Component<any, any> {
     }
 
     return (
-      <form className={classes.container} noValidate autoComplete="off">
+      <Paper className={classes.container}>
         <h1>Create a new game</h1>
-        <p>Add a team of players. Players will be notified when the game is ready to play.</p>
+        <form noValidate autoComplete="off">
+          <legend>Add a team of players. Players will be notified when the game is ready to play.</legend>
 
-        <TextField id="game-title"
-          className={classes.textField}
-          fullWidth={true}
-          label="Game Title"
-          value={this.state.game.title}
-          onChange={(e: any) => this.handleGameChange(e, 'title')}
-          margin="normal"
-        />
+          <TextField id="game-title"
+            className={classes.textField}
+            fullWidth={true}
+            label="Game Title"
+            value={this.state.game.title}
+            onChange={(e: any) => this.handleGameChange(e, 'title')}
+            margin="normal"
+          />
 
-        <TextField id="game-desc"
-          className={classes.textField}
-          fullWidth={true}
-          label="Game description (option)"
-          value={this.state.game.description}
-          onChange={(e: any) => this.handleGameChange(e, 'description')}
-          margin="normal"
-        />
+          <TextField id="game-desc"
+            className={classes.textField}
+            fullWidth={true}
+            label="Game description (option)"
+            value={this.state.game.description}
+            onChange={(e: any) => this.handleGameChange(e, 'description')}
+            margin="normal"
+          />
 
-        <TextField id="game-team"
-          select
-          fullWidth={true}
-          label="Select Team"
-          className={classes.textField}
-          onChange={(e: any) => this.handleGameChange(e, 'team')}
-          helperText="Please select your team"
-          margin="normal"
-          SelectProps={{
-            native: true,
-            MenuProps: {
-              className: classes.menu,
-            },
-          }}
-        >
-          {this.getTeamSelectOptions()}
-        </TextField>
+          <TextField id="game-team"
+            select
+            fullWidth={true}
+            label="Select Team"
+            className={classes.textField}
+            onChange={(e: any) => this.handleGameChange(e, 'team')}
+            helperText="Please select your team"
+            margin="normal"
+            SelectProps={{
+              native: true,
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+          >
+            {this.getTeamSelectOptions()}
+          </TextField>
 
-        <TextField id="game-cards"
-          select
-          fullWidth={true}
-          label="Select Cards"
-          className={classes.textField}
-          value={this.state.game.cards.name}
-          onChange={(e: any) => this.handleGameChange(e, 'cards')}
-          helperText="Please select your card deck"
-          margin="normal"
-          SelectProps={{
-            native: true,
-            MenuProps: {
-              className: classes.menu,
-            },
-          }}
-        >
-          {this.getCardsSelectOptions()}
-        </TextField>
-
-
-        <Button variant="contained" size="small" className={classes.button} disabled={this.isGameInvalid()} onClick={() => this.saveGame()}>
-          <SaveIcon className={classes.iconSmall} />
-          Save
+          <TextField id="game-cards"
+            select
+            fullWidth={true}
+            label="Select Cards"
+            className={classes.textField}
+            value={this.state.game.cards.name}
+            onChange={(e: any) => this.handleGameChange(e, 'cards')}
+            helperText="Please select your card deck"
+            margin="normal"
+            SelectProps={{
+              native: true,
+              MenuProps: {
+                className: classes.menu,
+              },
+            }}
+          >
+            {this.getCardsSelectOptions()}
+          </TextField>
+          <Button variant="contained" size="small" className={classes.button} disabled={this.isGameInvalid()} onClick={() => this.saveGame()}>
+            <SaveIcon className={classes.iconSmall} />
+            Save
         </Button>
-
-      </form>
+        </form>
+      </Paper>
     )
   }
 }

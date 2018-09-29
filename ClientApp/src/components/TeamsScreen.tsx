@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { firebaseConnect, isLoaded, isEmpty } from "react-redux-firebase";
 import { ChangeEvent } from "react";
+import { Team, Player } from "../core/models"
 
 interface IOwnProps {
   firebase: any;
@@ -16,18 +17,6 @@ interface ITempState {
   modalOpen: boolean;
   playerEmail: string;
   team: Team;
-}
-
-interface Team {
-  owner: string;
-  ownerEmail: string;
-  name: string
-  logoUrl: string;
-  players: Array<Player>;
-}
-
-interface Player {
-  email: string;
 }
 
 type IProps = IOwnProps;

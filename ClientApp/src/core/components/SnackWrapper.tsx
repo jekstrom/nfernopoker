@@ -4,14 +4,14 @@ import { Component } from 'react';
 import { Snackbar, IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { connect } from "react-redux";
-import { MessageTypes } from "../actions/Message";
+import { MessageTypes } from "../actions/SnackMessage";
 
 interface ISnackWrapperProps {
   classes: any;
 }
 interface IConnectedState {
-    message: string;
-    open: boolean;
+  message: string;
+  open: boolean;
 }
 interface IConnectedDispatch {
   clear: () => void

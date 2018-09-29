@@ -4,12 +4,13 @@ import { connect } from "react-redux";
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { withRouter } from "react-router";
-import LoginScreen from './components/LoginScreen';
-import Layout from './components/Layout';
+import Layout from './core/components/Layout';
+import LoginScreen from './scenes/login/LoginScreen';
 import { GameScreen } from './components/GameScreen';
 import { GamesScreen } from './components/Games';
 import { TeamsScreen } from './components/TeamsScreen';
 import NewGame from './components/NewGame';
+import PageNotFound from './core/components/PageNotFound';
 
 const LoggedInRoutes = [
   <Route exact={true} path='/teams' component={TeamsScreen} />,
@@ -36,7 +37,7 @@ class App extends React.Component<any> {
             {[
               !loggedIn && LoggedOutRoutes,
               loggedIn && LoggedInRoutes,
-              //<Route component={404Route} />
+              <Route component={PageNotFound} />
             ]}
           </Switch>
       </Layout>

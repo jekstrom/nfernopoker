@@ -41,7 +41,7 @@ const styles: any = (theme: any) => ({
   },
   content: {
     backgroundColor: theme.palette.background.default,
-    backgroundImage: "url(" + require('../../public/img/hell.jpg') + ")",
+    backgroundImage: "url(" + require('../../../public/img/hell.jpg') + ")",
     padding: theme.spacing.unit * 3,
     minWidth: 0, // So the Typography noWrap works
     filter: 'saturate(125%)',

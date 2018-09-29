@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, IconButton, Button } from '@material-ui/core';
+import { AppBar, Toolbar, IconButton, Button, withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import { AccountCircle } from '@material-ui/icons';
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
@@ -30,12 +30,13 @@ class AppHeaderComponent extends React.Component<any, any> {
   };
 
   render() {
+    const classes = this.props;
     let title = "N-Ferno Poker";
 
     return (
-      <AppBar position="absolute" style={styles.appBar}>
+      <AppBar position="absolute" className={classes.appBar}>
         <Toolbar>
-          <Typography style={styles.appTitle} variant="title" color="inherit" noWrap={true}>
+          <Typography className={classes.appTitle} variant="title" color="inherit" noWrap={true}>
             {title}
           </Typography>
           {
@@ -65,6 +66,7 @@ class AppHeaderComponent extends React.Component<any, any> {
 
 export default compose<React.ComponentClass<any>>(
   withRouter,
+  withStyles(styles),
   firebaseConnect((props: any) => {
     return [
       'auth',

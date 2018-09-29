@@ -6,7 +6,7 @@ import { compose } from "redux";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router";
 import { withFirebase } from "react-redux-firebase";
-import { MessageTypes } from "../actions/Message";
+import { MessageTypes } from "../../core/actions/SnackMessage";
 
 interface ILoginProps {
   classes: any;
@@ -67,10 +67,11 @@ class LoginComponent extends Component<IProps, ILoginState> {
   }
 
   public render() {
+    const { classes } = this.props;
     return (
       <form>
         <CardContent>
-          <Typography className={this.props.classes.title} color="textSecondary">
+          <Typography className={classes.title} color="textSecondary">
             Log in to feel the burn
           </Typography>
           <TextField
@@ -79,7 +80,7 @@ class LoginComponent extends Component<IProps, ILoginState> {
             fullWidth={true}
             label="Email"
             onChange={this.storeUser}
-            className={this.props.classes.button}
+            className={classes.button}
           />
           <TextField
             id="pword"
@@ -87,11 +88,11 @@ class LoginComponent extends Component<IProps, ILoginState> {
             type="password"
             label="Password"
             onChange={this.storePwrd}
-            className={this.props.classes.button}
+            className={classes.button}
           />
         </CardContent>
         <CardActions>
-          <Button type="submit" className={this.props.classes.button} onClick={this.login} variant="raised"
+          <Button type="submit" className={classes.button} onClick={this.login} variant="raised"
             style={{ marginLeft: '16px' }} title="Login" color="primary">Login</Button>
           <Button onClick={this.props.onSecondaryButton} size="small">
             {this.props.secondaryButtonText}
