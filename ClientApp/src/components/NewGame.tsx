@@ -6,6 +6,7 @@ import { firebaseConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
 import { withStyles } from '@material-ui/core/styles';
 import SaveIcon from '@material-ui/icons/Save';
+import { withRouter } from "react-router";
 
 const styles: any = (theme: any) => ({
   container: {
@@ -50,35 +51,29 @@ class NewGameComponent extends React.Component<any, any> {
       game: {
         title: "",
         description: "",
-        team: this.props.teams ? this.props.teams[0].name : "",
+        team: "",
         cards: this.cardOptions[0],
         stories: []
       }
     };
-
   }
 
   handleGameChange = (event: ChangeEvent<HTMLInputElement>, name: string) => {
-
     let newState = { ...this.state };
     if (name == 'team') {
-      //Object.keys(this.props.teams).forEach(k => {
-        //if (this.props.teams[k].name == event.target.value) {
-          newState.game.team = this.props.teams[event.target.value];
-        //}
-      //});
+      newState.game.team = this.props.teams[event.target.value];
     } else if (name == "cards") {
       newState.game.cards = this.cardOptions.find(x => x.name == event.target.value);
     }
     else {
       newState.game[name] = event.target.value
     }
-
     this.setState(newState);
   }
 
-  saveGame() {
+  saveGame(): void {
     this.props.firebase.push('games', this.state.game);
+    this.props.history.push('/games');
   }
 
   isGameInvalid(): boolean {
@@ -86,34 +81,37 @@ class NewGameComponent extends React.Component<any, any> {
     return game.title == "" || game.description == "" || game.team == "" || game.cards == "";
   }
 
-  render() {
-    let classes = this.props.classes;
-    let teams = this.props.teams;
-
-    if (!teams) {
-      return (<h1>Go add a team!</h1>)
-    }
-
-    let cards = this.cardOptions.map((cardDeck, index) => {
+  getCardsSelectOptions(): Array<JSX.Element> {
+    return this.cardOptions.map((cardDeck, index) => {
       return (<option key={index} value={cardDeck.name}>
         {cardDeck.name}
       </option>)
     });
+  }
 
-    let menuItems = Object.keys(teams).map((key, index) => {
-      let team = teams[key];
+  getTeamSelectOptions(): Array<JSX.Element> {
+    let menuItems = Object.keys(this.props.teams).map((key, index) => {
       return (<option key={index} value={key}>
-        {team.name}
+        {this.props.teams[key].name}
       </option>)
     });
+    menuItems.unshift(<option key="666">-- SELECT TEAM --</option>)
+    return menuItems;
+  }
+
+  render(): JSX.Element {
+    let classes = this.props.classes;
+
+    if (!this.props.teams) {
+      return (<h1>Go add a team!</h1>)
+    }
 
     return (
       <form className={classes.container} noValidate autoComplete="off">
         <h1>Create a new game</h1>
         <p>Add a team of players. Players will be notified when the game is ready to play.</p>
 
-        <TextField
-          id="name"
+        <TextField id="game-title"
           className={classes.textField}
           fullWidth={true}
           label="Game Title"
@@ -122,8 +120,7 @@ class NewGameComponent extends React.Component<any, any> {
           margin="normal"
         />
 
-        <TextField
-          id="name"
+        <TextField id="game-desc"
           className={classes.textField}
           fullWidth={true}
           label="Game description (option)"
@@ -132,13 +129,11 @@ class NewGameComponent extends React.Component<any, any> {
           margin="normal"
         />
 
-        <TextField
-          id="select-team"
+        <TextField id="game-team"
           select
           fullWidth={true}
           label="Select Team"
           className={classes.textField}
-          value={this.state.game.team.name}
           onChange={(e: any) => this.handleGameChange(e, 'team')}
           helperText="Please select your team"
           margin="normal"
@@ -149,12 +144,10 @@ class NewGameComponent extends React.Component<any, any> {
             },
           }}
         >
-          <option disabled hidden value=''></option>
-          {menuItems}
+          {this.getTeamSelectOptions()}
         </TextField>
 
-        <TextField
-          id="select-cards"
+        <TextField id="game-cards"
           select
           fullWidth={true}
           label="Select Cards"
@@ -170,9 +163,9 @@ class NewGameComponent extends React.Component<any, any> {
             },
           }}
         >
-          <option disabled hidden value=''></option>
-          {cards}
+          {this.getCardsSelectOptions()}
         </TextField>
+
 
         <Button variant="contained" size="small" className={classes.button} disabled={this.isGameInvalid()} onClick={() => this.saveGame()}>
           <SaveIcon className={classes.iconSmall} />
@@ -190,6 +183,7 @@ const mapStateToProps = (state: any) => ({
 
 export default compose(
   withStyles(styles),
+  withRouter,
   firebaseConnect((props: any) => [
     'teams'
   ]),

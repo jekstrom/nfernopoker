@@ -3,11 +3,13 @@ import { Card, CardMedia, CardContent, Typography, Button } from "@material-ui/c
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { firebaseConnect, isLoaded, isEmpty } from "react-redux-firebase";
+import { withRouter } from "react-router";
 
 interface IOwnProps {
   firebase: any;
   profile: any;
   games: Array<any>;
+  history: any;
 }
 
 type IProps = IOwnProps;
@@ -64,12 +66,16 @@ class GamesScreenComponent extends React.Component<IProps, any> {
     this.state = {
       modalOpen: false,
       teamRef: null,
-      playerEmail: "",
+      playerEmail: ""
     };
   }
 
+  playGame(key: string) {
+    this.props.history.push(`/game/${key}`);
+  }
+
   removeItem(key: string) {
-    this.props.firebase.remove(`/teams/${key}`)
+    this.props.firebase.remove(`/games/${key}`);
   }
 
   render() {
@@ -94,7 +100,7 @@ class GamesScreenComponent extends React.Component<IProps, any> {
             <Button color="secondary" onClick={() => this.removeItem(key)}>
               Delete
             </Button>
-            <Button color="primary">
+            <Button color="primary" onClick={() => this.playGame(key)}>
               Play
             </Button>
           </CardContent>
@@ -110,6 +116,7 @@ class GamesScreenComponent extends React.Component<IProps, any> {
 }
 
 export const GamesScreen: React.ComponentClass<any> = compose<React.ComponentClass<any>>(
+  withRouter,
   firebaseConnect((props: IProps) => [
     'games',
   ]),
