@@ -23,6 +23,11 @@ class AppHeaderComponent extends React.Component<any, any> {
     super(props);
   }
 
+  public logout = () => {
+    this.props.firebase.logout();
+    this.props.history.push("/");
+  };
+
   render() {
     let title = "N-Ferno Poker";
 
@@ -53,10 +58,6 @@ class AppHeaderComponent extends React.Component<any, any> {
       </AppBar>
     );
   }
-
-  public logout = () => {
-    this.props.firebase.logout();
-  };
 
 }
 

@@ -4,12 +4,12 @@ import { MuiThemeProvider, createMuiTheme, withStyles } from '@material-ui/core/
 import orange from '@material-ui/core/colors/orange';
 import AppHeader from './AppHeader';
 import { Link } from 'react-router-dom';
-
 import { connect } from 'react-redux'
-import { Component, MouseEvent } from 'react';
-import { firebaseConnect } from 'react-redux-firebase'; //isEmpty
+import { Component } from 'react';
+import { firebaseConnect, isEmpty } from 'react-redux-firebase'; //isEmpty
 import { compose } from 'redux';
 import { SnackWrapper } from './SnackWrapper';
+import { withRouter } from 'react-router';
 
 export interface ILayoutProps {
   snack: any;
@@ -18,6 +18,7 @@ export interface ILayoutProps {
   children: any;
   profile: any;
   auth: any;
+  history: any;
 }
 
 const theme = createMuiTheme({
@@ -44,7 +45,7 @@ const styles: any = (theme: any) => ({
   },
   content: {
     backgroundColor: theme.palette.background.default,
-    backgroundImage: "url("+ require('../../public/img/hell.jpg') +")",
+    backgroundImage: "url(" + require('../../public/img/hell.jpg') + ")",
     padding: theme.spacing.unit * 3,
     minWidth: 0, // So the Typography noWrap works
     filter: 'saturate(125%)',
@@ -61,11 +62,14 @@ class Layout extends Component<ILayoutProps> {
     super(props)
   }
 
-  logout = (event: MouseEvent<HTMLElement>) => {
+  logout() {
     this.props.firebase.logout();
+    this.props.history.push("/login");
   };
 
   render() {
+    let loggedIn = !isEmpty(this.props.auth);
+
     return (
       <MuiThemeProvider theme={theme}>
         <div className={this.props.classes.root} >
@@ -77,12 +81,18 @@ class Layout extends Component<ILayoutProps> {
               paper: this.props.classes.drawerPaper
             }}
           >
-            <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Home</MenuItem></Link>
+            {!loggedIn &&
+              <Link to={'/'}><MenuItem selected={window.location.pathname === '/'}>Login</MenuItem></Link>
+            }
             <Divider />
-            <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
-            <Link to={'/game/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
-            <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
-            <Link to={'/games'}><MenuItem selected={window.location.pathname === '/games'}>All Games</MenuItem></Link>
+            {loggedIn &&
+              (<div>
+                <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
+                <Link to={'/game/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
+                <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
+                <Link to={'/games'}><MenuItem selected={window.location.pathname === '/games'}>All Games</MenuItem></Link>
+              </div>)
+            }
           </Drawer>
           <main className={this.props.classes.content}>
             {this.props.children}
@@ -96,6 +106,7 @@ class Layout extends Component<ILayoutProps> {
 
 export default compose(
   withStyles(styles),
+  withRouter,
   firebaseConnect(),
   connect((state: any, props: any) => ({
     snack: state.snack,

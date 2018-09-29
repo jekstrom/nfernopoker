@@ -25,7 +25,7 @@ class LoginComponent extends Component<IProps, ILoginState> {
   public state: ILoginState
 
   constructor(
-    public props: IProps,
+    public props: IProps
   ) {
     super(props);
     this.state = { username: "", password: "", errorMessage: "" };
@@ -34,19 +34,42 @@ class LoginComponent extends Component<IProps, ILoginState> {
   public storeUser = (event: ChangeEvent<HTMLInputElement>) => this.setState({ username: event.target.value });
   public storePwrd = (event: ChangeEvent<HTMLInputElement>) => this.setState({ password: event.target.value });
 
-  public handleClose = (event: MouseEvent<HTMLElement>) => {
-    this.setState({ errorMessage: "" });
+  public login = (event: MouseEvent<any>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    try {
+      this.props.firebase.login({
+        email: this.state.username,
+        password: this.state.password
+      }).then((r: any) => {
+        this.props.history.push('/games');
+      }, (e: any) => {
+        console.log(e);
+        this.setState({ errorMessage: e.message });
+      });
+    } catch (ex) {
+      if (ex.message == 'Sign in failed "Email" must be a valid string.') {
+        this.setState({ errorMessage: "Email: must be a valid string." });
+        return;
+      }
+      if (ex.message == 'Sign in failed: "Password" must be a valid string.') {
+        this.setState({ errorMessage: "Password: must be a valid string." });
+        return;
+      }
+      this.setState({ errorMessage: ex.message });
+    }
   }
 
   public render() {
     return (
-      <React.Fragment>
+      <form>
         <CardContent>
           <Typography className={this.props.classes.title} color="textSecondary">
             Log in to feel the burn
           </Typography>
           <TextField
             id="username"
+            autoComplete="current-user"
             fullWidth={true}
             label="Email"
             onChange={this.storeUser}
@@ -62,39 +85,17 @@ class LoginComponent extends Component<IProps, ILoginState> {
           />
         </CardContent>
         <CardActions>
-          <Button className={this.props.classes.button} onClick={this.login} variant="raised" style={{ marginLeft: '16px' }} title="Login" color="primary">Login</Button>
+          <Button type="submit" className={this.props.classes.button} onClick={this.login} variant="raised"
+            style={{ marginLeft: '16px' }} title="Login" color="primary">Login</Button>
           <Button onClick={this.props.onSecondaryButton} size="small">
             {this.props.secondaryButtonText}
           </Button>
         </CardActions>
-      </React.Fragment>
+        <div>
+          <p>{this.state.errorMessage}</p>
+        </div>
+      </form>
     );
-  }
-
-  public login = (event: MouseEvent<any>) => {
-    event.preventDefault();
-    event.stopPropagation();
-    try {
-      this.props.firebase.login({
-        email: this.state.username,
-        password: this.state.password
-      }).then((r: any) => {
-        this.props.history.push('/counter');
-      }, (e: any) => {
-        console.log(e);
-        this.setState({ errorMessage: e.message });
-      });
-    } catch (ex) {
-      if (ex.message == 'signInWithEmailAndPassword failed: First argument "email" must be a valid string.') {
-        this.setState({ errorMessage: "Email: must be a valid string." });
-        return;
-      }
-      if (ex.message == 'signInWithEmailAndPassword failed: Second argument "password" must be a valid string.') {
-        this.setState({ errorMessage: "Password: must be a valid string." });
-        return;
-      }
-      this.setState({ errorMessage: ex.message });
-    }
   }
 }
 
