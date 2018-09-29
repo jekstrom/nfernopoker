@@ -62,11 +62,6 @@ class Layout extends Component<ILayoutProps> {
     super(props)
   }
 
-  logout() {
-    this.props.firebase.logout();
-    this.props.history.push("/login");
-  };
-
   render() {
     let loggedIn = !isEmpty(this.props.auth);
 

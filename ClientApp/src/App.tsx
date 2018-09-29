@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {  Route, Switch } from 'react-router-dom';
 import { connect } from "react-redux";
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
@@ -12,14 +12,14 @@ import { TeamsScreen } from './components/TeamsScreen';
 import NewGame from './components/NewGame';
 
 const LoggedInRoutes = [
-  <Route path='/teams' component={TeamsScreen} />,
-  <Route path='/games' component={GamesScreen} />,
-  <Route path='/game' component={GameScreen} />,
+  <Route exact={true} path='/teams' component={TeamsScreen} />,
+  <Route exact={true} path='/games' component={GamesScreen} />,
+  <Route exact={true} path='/game' component={GameScreen} />,
   <Route exact={true} path='/game/new' component={NewGame} />
 ];
 
 const LoggedOutRoutes = [
-  <Route path='/' component={LoginScreen} />
+  <Route exact={true} path='/' component={LoginScreen} />
 ];
 
 class App extends React.Component<any> {
@@ -32,7 +32,6 @@ class App extends React.Component<any> {
     let loggedIn = !isEmpty(this.props.auth);
     return (
       <Layout>
-        <BrowserRouter>
           <Switch>
             {[
               !loggedIn && LoggedOutRoutes,
@@ -40,7 +39,6 @@ class App extends React.Component<any> {
               //<Route component={404Route} />
             ]}
           </Switch>
-        </BrowserRouter>
       </Layout>
     );
   }
@@ -57,7 +55,3 @@ export default compose(
   ]),
   connect(mapStateToProps)
 )(App) as React.ComponentClass<any>;
-
-
-
-

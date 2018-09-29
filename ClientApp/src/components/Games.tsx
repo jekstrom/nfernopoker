@@ -15,20 +15,6 @@ interface IOwnProps {
 type IProps = IOwnProps;
 
 const styles = {
-  layout: {
-    display: 'grid',
-    grid: `
-            [issuerow-start] "issue-view" 1fr [issuerow-end]
-            [cardrow-start] "card-view" auto [cardrow-end]
-            / 100%
-        `,
-    width: '100%',
-    height: '100%'
-  },
-  issuecontainer: {
-    gridArea: 'issue-view',
-    alignSelf: 'stretch'
-  },
   button: {
     background: 'white',
     width: '100px'
@@ -107,7 +93,7 @@ class GamesScreenComponent extends React.Component<IProps, any> {
         </Card>
       });
     }
-    return <div style={styles.layout}>
+    return <div>
       <section style={styles.cardcontainer} >
         {cards}
       </section>
