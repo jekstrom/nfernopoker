@@ -1,12 +1,7 @@
+//TODO: Wire back in?
 declare namespace Types {
   type Routing = {
     location: string | null;
-  }
-
-  type Counter = {
-    count: number;
-    increment: any;
-    decrement: any;
   }
 
   type Message = {
@@ -15,8 +10,7 @@ declare namespace Types {
   }
 
   export type Store = {
-    counter: Counter;
-    snack: Message;
+    snacks: Message;
     routing: Routing;
   }
 }

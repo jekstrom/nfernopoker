@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Component } from 'react';
-import { Typography, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const styles: any = (theme: any) => ({
@@ -21,7 +21,7 @@ class PageNotFound extends Component<any> {
 
   render() {
     const { classes } = this.props;
-    const firestar = require("../../../public/img/666_firestar.jpg");
+    const four0four = require("../../../public/img/404_notfound.png");
     return (
       <Grid
         container
@@ -30,10 +30,8 @@ class PageNotFound extends Component<any> {
         direction="column"
         justify="center"
       >
-        <Typography className={classes.title} color="textPrimary">
-          <h1>PAGE NOT FOUND </h1>
-        </Typography>
-        <img className={classes.img} src={firestar} />
+        <h1 className={classes.title}>PAGE NOT FOUND</h1>
+        <img className={classes.img} src={four0four} />
       </Grid>
     );
   }

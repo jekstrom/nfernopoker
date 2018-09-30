@@ -38,11 +38,15 @@ class GamesScreenComponent extends React.Component<IProps, any> {
   }
 
   playGame(key: string) {
-    this.props.history.push(`/game/${key}`);
+    this.props.history.push(`/games/${key}`);
   }
 
   removeItem(key: string) {
     this.props.firebase.remove(`/games/${key}`);
+  }
+
+  editStories(key: string) {
+    this.props.history.push(`/games/${key}/stories`);
   }
 
   render() {
@@ -71,6 +75,9 @@ class GamesScreenComponent extends React.Component<IProps, any> {
             </Button>
               <Button color="primary" onClick={() => this.playGame(key)}>
                 Play
+            </Button>
+            <Button color="primary" onClick={() => this.editStories(key)}>
+                Stories
             </Button>
             </CardContent>
           </Card>

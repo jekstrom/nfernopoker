@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {  Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { connect } from "react-redux";
 import { firebaseConnect, isEmpty } from 'react-redux-firebase';
 import { compose } from 'redux';
@@ -9,18 +9,22 @@ import LoginScreen from './scenes/login/LoginScreen';
 import { GameScreen } from './components/GameScreen';
 import { GamesScreen } from './components/Games';
 import { TeamsScreen } from './components/TeamsScreen';
-import NewGame from './components/NewGame';
+import HomePageComponent from './scenes/home/Home';
+import NewGame from './scenes/new-game/NewGame';
+import StoryList from './scenes/new-game/StoryList';
 import PageNotFound from './core/components/PageNotFound';
 
 const LoggedInRoutes = [
-  <Route exact={true} path='/teams' component={TeamsScreen} />,
-  <Route exact={true} path='/games' component={GamesScreen} />,
-  <Route exact={true} path='/game' component={GameScreen} />,
-  <Route exact={true} path='/game/new' component={NewGame} />
+  <Route key={0} exact path='/' component={HomePageComponent} />,
+  <Route key={1} exact path='/teams' component={TeamsScreen} />,
+  <Route key={2} exact path='/games' component={GamesScreen} />,
+  <Route key={4} exact path='/games/new' component={NewGame} />,
+  <Route key={3} exact path='/games/:key' component={GameScreen} />,
+  <Route key={5} exact path='/games/:key/stories' component={StoryList} />
 ];
 
 const LoggedOutRoutes = [
-  <Route exact={true} path='/' component={LoginScreen} />
+  <Route key={6} exact path='/' component={LoginScreen} />
 ];
 
 class App extends React.Component<any> {
@@ -33,13 +37,13 @@ class App extends React.Component<any> {
     let loggedIn = !isEmpty(this.props.auth);
     return (
       <Layout>
-          <Switch>
-            {[
-              !loggedIn && LoggedOutRoutes,
-              loggedIn && LoggedInRoutes,
-              <Route component={PageNotFound} />
-            ]}
-          </Switch>
+        <Switch>
+          {[
+            !loggedIn && LoggedOutRoutes,
+            loggedIn && LoggedInRoutes,
+            <Route path='*' key={99} component={PageNotFound} />
+          ]}
+        </Switch>
       </Layout>
     );
   }
@@ -51,7 +55,7 @@ const mapStateToProps = (state: any) => ({
 
 export default compose(
   withRouter,
-  firebaseConnect((props: any) => [
+  firebaseConnect(() => [
     'auth'
   ]),
   connect(mapStateToProps)

@@ -176,9 +176,8 @@ const mapStateToProps = (state: any) => ({
 export default compose(
   withStyles(styles),
   withRouter,
-  firebaseConnect((props: any) => [
+  firebaseConnect(() => [
     'teams'
   ]),
   connect(mapStateToProps)
 )(NewGameComponent) as React.ComponentClass<any>;
-

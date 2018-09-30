@@ -64,7 +64,7 @@ class Layout extends Component<ILayoutProps> {
     return (
       <MuiThemeProvider theme={theme}>
         <div className={this.props.classes.root} >
-          <AppHeader {...this.props} />
+          <AppHeader />
           <Drawer
             variant="permanent"
             style={{ gridArea: 'drawer' }}
@@ -79,8 +79,7 @@ class Layout extends Component<ILayoutProps> {
             {loggedIn &&
               (<div>
                 <Link to={'/teams'}><MenuItem selected={window.location.pathname === '/teams'}>Teams</MenuItem></Link>
-                <Link to={'/game/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
-                <Link to={'/game'}><MenuItem selected={window.location.pathname === '/game'}>Game</MenuItem></Link>
+                <Link to={'/games/new'}><MenuItem selected={window.location.pathname === '/game/new'}>New Game</MenuItem></Link>
                 <Link to={'/games'}><MenuItem selected={window.location.pathname === '/games'}>All Games</MenuItem></Link>
               </div>)
             }
