@@ -39,19 +39,21 @@ namespace nfernopoker
       {
         var config = new TinyOAuthConfig
         {
-          AccessTokenUrl = "http://localhost:8080/plugins/servlet/oauth/access-token",
-          AuthorizeTokenUrl = "http://localhost:8080/plugins/servlet/oauth/authorize",
-          RequestTokenUrl = "http://localhost:8080/plugins/servlet/oauth/request-token",
+          AccessTokenUrl = "https://nfernopoker.atlassian.net/plugins/servlet/oauth/access-token",
+          AuthorizeTokenUrl = "https://nfernopoker.atlassian.net/plugins/servlet/oauth/authorize",
+          RequestTokenUrl = "https://nfernopoker.atlassian.net/plugins/servlet/oauth/request-token",
           ConsumerKey = "nfernopoker2",
           ConsumerSecret = "nfernopoker2",
           SignatureMethod = "RSA-SHA1",
-          SigningKey = reader.ReadToEnd()
+          SigningKey = reader.ReadToEnd(),
+          OauthCallback = "http://localhost:52690/api/jira/callback"
         };
 
         services.AddSingleton<ITinyOAuth>(sp => new TinyOAuth(config));
+        services.AddSingleton<TinyOAuthConfig>(config);
       }
 
-      string baseAddress = "http://localhost:8080/rest/api/2";
+      string baseAddress = "https://nfernopoker.atlassian.net/rest/api/latest";
 
       services.AddSingleton<IRestClientFactory>(sp => new RestClientFactory());
 

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using nfernopoker.Domain.Apis;
@@ -14,12 +16,14 @@ namespace nfernopoker.Controllers
   {
     private readonly IJiraApi _jiraApi;
     private readonly ITinyOAuth _tinyOAuth;
-    private static string _oauth_token;
+    private static AccessTokenInfo _accessToken;
+    private readonly TinyOAuthConfig _config;
 
-    public JiraController(IJiraApi jiraApi, ITinyOAuth tinyOAuth)
+    public JiraController(IJiraApi jiraApi, ITinyOAuth tinyOAuth, TinyOAuthConfig config)
     {
       _jiraApi = jiraApi ?? throw new ArgumentNullException(nameof(jiraApi));
       _tinyOAuth = tinyOAuth ?? throw new ArgumentNullException(nameof(tinyOAuth));
+      _config = config;
     }
 
     [HttpGet]
@@ -33,20 +37,28 @@ namespace nfernopoker.Controllers
     }
 
     [HttpGet("callback")]
-    public async Task<IActionResult> CallbackHandler(string oauth_token)
+    public async Task<IActionResult> CallbackHandler(string oauth_token, string oauth_verifier)
     {
-      var isuses = await _jiraApi.GetIssue("NFER-10", oauth_token);
-      _oauth_token = oauth_token;
+
+      _accessToken = await _tinyOAuth.GetAccessTokenAsync(oauth_token, "nfernopoker2", oauth_verifier);
+
+      var httpClient = new HttpClient(new TinyOAuthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
+
+      // Now we just use the HttpClient like normally
+      var resp = await httpClient.GetAsync("https://nfernopoker.atlassian.net/rest/api/latest/issue/NFER-1.json");
+      var respJson = await resp.Content.ReadAsStringAsync();
 
       return Redirect("http://localhost:3000");
     }
 
     [HttpGet("issue/{id}")]
-    public async Task<IActionResult> GetIssueById(string id)
+    public async Task<JsonResult> GetIssueById(string id)
     {
-      Issue issue = await _jiraApi.GetIssue(id, _oauth_token);
+      var httpClient = new HttpClient(new TinyOAuthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
 
-      return Json(issue);
+      // Now we just use the HttpClient like normally
+      var resp = await httpClient.GetAsync($"https://nfernopoker.atlassian.net/rest/api/latest/issue/{id}.json");
+      return Json(await resp.Content.ReadAsStringAsync());
     }
   }
 }
