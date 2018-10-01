@@ -11,7 +11,7 @@ import { GamesScreen } from './components/Games';
 import { TeamsScreen } from './components/TeamsScreen';
 import HomePageComponent from './scenes/home/Home';
 import NewGame from './scenes/new-game/NewGame';
-import StoryList from './scenes/new-game/StoryList';
+import StoryPage from './scenes/new-game/StoryPage';
 import PageNotFound from './core/components/PageNotFound';
 
 const LoggedInRoutes = [
@@ -20,7 +20,7 @@ const LoggedInRoutes = [
   <Route key={2} exact path='/games' component={GamesScreen} />,
   <Route key={4} exact path='/games/new' component={NewGame} />,
   <Route key={3} exact path='/games/:key' component={GameScreen} />,
-  <Route key={5} exact path='/games/:key/stories' component={StoryList} />
+  <Route key={5} exact path='/games/:key/stories' component={StoryPage} />
 ];
 
 const LoggedOutRoutes = [
