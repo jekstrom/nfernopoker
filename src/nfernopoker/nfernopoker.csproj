@@ -27,6 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
+<<<<<<< HEAD:src/nfernopoker/nfernopoker.csproj
     <ProjectReference Include="..\nfernopoker.Domain\nfernopoker.Domain.csproj" />
   </ItemGroup>
 
@@ -34,6 +35,15 @@
     <Reference Include="TinyOAuth1">
       <HintPath>..\..\..\tinoyoauth1\TinyOAuth1\bin\Debug\netstandard2.0\TinyOAuth1.dll</HintPath>
     </Reference>
+=======
+    <None Remove="ClientApp\src\core\models\index.ts" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ClientApp\src\core\models\index.ts">
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+>>>>>>> 9c2448878fcaa4a3cf00cb3026fe42d6c8dabf21:nfernopoker.csproj
   </ItemGroup>
 
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">

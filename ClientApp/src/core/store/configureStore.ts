@@ -1,9 +1,9 @@
 import { routerMiddleware, routerReducer } from 'react-router-redux';
 import { applyMiddleware, combineReducers, compose, createStore } from 'redux';
 import thunk from 'redux-thunk';
-import * as SnackMessage from './SnackMessage';
 import { reactReduxFirebase, firebaseReducer } from 'react-redux-firebase';
 import * as firebase from "firebase";
+import * as SnackMessage from "../actions/SnackMessage";
 
 export default function configureStore(history: any, initialState: any) {
 
@@ -34,7 +34,7 @@ export default function configureStore(history: any, initialState: any) {
   )(createStore)
 
   const reducers = {
-    snack: SnackMessage.reducer
+    snacks: SnackMessage.reducer
   };
 
   const middleware = [
@@ -50,8 +50,8 @@ export default function configureStore(history: any, initialState: any) {
   }
 
   const rootReducer = combineReducers({
-    firebase: firebaseReducer,
     ...reducers,
+    firebase: firebaseReducer,
     routing: routerReducer
   });
 

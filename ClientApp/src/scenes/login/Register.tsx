@@ -4,7 +4,7 @@ import { Component, MouseEvent, ChangeEvent } from 'react';
 import { Button, TextField, CardContent, CardActions, Typography } from '@material-ui/core';
 import { RouteComponentProps, withRouter } from "react-router";
 import { connect } from "react-redux";
-import { MessageTypes } from "../actions/Message";
+import { MessageTypes } from "../../core/actions/SnackMessage";
 import { compose } from "redux";
 import { withFirebase } from "react-redux-firebase";
 
@@ -23,8 +23,7 @@ interface IFirebase {
   firebase: any;
 }
 interface IConnectedDispatch {
-  sendMessage: (message: string) => void,
-  clear: () => void
+  sendMessage: (message: string) => void
 }
 type IProps = ILocalProps & IConnectedDispatch & RouteComponentProps<any> & IFirebase;
 
@@ -54,7 +53,7 @@ class RegisterComponent extends Component<IProps, ILocalState> {
       { email: this.state.email, password: this.state.password },
       { firstName: this.state.firstName, lastName: this.state.lastName, email: this.state.email }
     ).then((r: any) => {
-      this.props.history.push('/counter');
+      this.props.history.push('/games');
     }, (e: any) => {
       this.props.sendMessage(e.message);
     }).catch((ex: any) => this.props.sendMessage(ex.message));
@@ -114,9 +113,6 @@ class RegisterComponent extends Component<IProps, ILocalState> {
 const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): IConnectedDispatch => ({
   sendMessage: (message: string) => {
     dispatch({ type: MessageTypes.ToastMessage, payload: message });
-  },
-  clear: () => {
-    dispatch({ type: MessageTypes.ToastClearMessage });
   }
 });
 
