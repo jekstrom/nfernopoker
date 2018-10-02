@@ -1,4 +1,4 @@
-﻿import * as React from "react";
+import * as React from "react";
 import { Component } from 'react';
 import { Login } from './Login';
 import { Register } from './Register';
@@ -43,8 +43,8 @@ class LoginScreen extends Component<ILoginScreenProps & RouteComponentProps<any>
   public render() {
     const loginScreen =
       this.state.isLogin ?
-        <Register classes={this.props.classes} secondaryButtonText='Log in instead' onSecondaryButton={this.toggleState} /> :
-        <Login classes={this.props.classes} secondaryButtonText='No account?' onSecondaryButton={this.toggleState} />
+        <Login classes={this.props.classes} secondaryButtonText='No account?' onSecondaryButton={this.toggleState} /> :
+        <Register classes={this.props.classes} secondaryButtonText='Log in instead' onSecondaryButton={this.toggleState} />
     return (
       <Grid className={this.props.classes.root} container={true} alignItems="center" alignContent="center" justify="center" direction="row">
         <Grid item={true} className={this.props.classes.login}>

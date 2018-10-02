@@ -4,7 +4,7 @@ import { Component } from 'react';
 import { Snackbar, IconButton } from "@material-ui/core";
 import { Close } from "@material-ui/icons";
 import { connect } from "react-redux";
-import { MessageTypes } from "../actions/Message";
+import { MessageTypes } from "../actions/SnackMessage";
 
 interface ISnackWrapperProps {
   classes: any;
@@ -14,7 +14,6 @@ interface IConnectedState {
   open: boolean;
 }
 interface IConnectedDispatch {
-  sendMessage: (message: string) => void,
   clear: () => void
 }
 
@@ -44,14 +43,12 @@ class SnackWrapperComponent extends Component<IProps, {}> {
   }
 }
 
-const mapStateToProps = (state: Types.Message, props: ISnackWrapperProps): IConnectedState => ({
-  message: state.message,
-  open: state.open
+const mapStateToProps = (state: any, props: ISnackWrapperProps): IConnectedState => ({
+  message: state.snacks.message,
+  open: state.snacks.open
 });
+
 const mapDispatchToProps = (dispatch: redux.Dispatch<Types.Store>): IConnectedDispatch => ({
-  sendMessage: (message: string) => {
-    dispatch({ type: MessageTypes.ToastMessage, payload: message });
-  },
   clear: () => {
     dispatch({ type: MessageTypes.ToastClearMessage });
   }
