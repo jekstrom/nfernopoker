@@ -2,14 +2,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
-using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using System;
 using System.IO;
-using System.Net.Http;
-using System.Threading.Tasks;
-using TinyOAuth1;
-using RestSharp;
+using SmallOauth1;
 using nfernopoker.Domain.Apis;
 using nfernopoker.Domain.Services;
 
@@ -37,7 +31,7 @@ namespace nfernopoker
 
       using (var reader = File.OpenText("jira_privatekey.pem"))
       {
-        var config = new TinyOAuthConfig
+        var config = new SmallOauthConfig
         {
           AccessTokenUrl = "https://nfernopoker.atlassian.net/plugins/servlet/oauth/access-token",
           AuthorizeTokenUrl = "https://nfernopoker.atlassian.net/plugins/servlet/oauth/authorize",
@@ -49,8 +43,8 @@ namespace nfernopoker
           OauthCallback = "http://localhost:52690/api/jira/callback"
         };
 
-        services.AddSingleton<ITinyOAuth>(sp => new TinyOAuth(config));
-        services.AddSingleton<TinyOAuthConfig>(config);
+        services.AddSingleton<ISmallOauth>(sp => new SmallOauth(config));
+        services.AddSingleton<SmallOauthConfig>(config);
       }
 
       string baseAddress = "https://nfernopoker.atlassian.net/rest/api/latest";

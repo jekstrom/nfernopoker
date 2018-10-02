@@ -1,13 +1,10 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using nfernopoker.Domain.Apis;
-using nfernopoker.Domain.Models;
-using TinyOAuth1;
+using SmallOauth1;
+using SmallOauth1.Utilities;
 
 namespace nfernopoker.Controllers
 {
@@ -15,23 +12,23 @@ namespace nfernopoker.Controllers
   public class JiraController : Controller
   {
     private readonly IJiraApi _jiraApi;
-    private readonly ITinyOAuth _tinyOAuth;
+    private readonly ISmallOauth _smallOauth;
     private static AccessTokenInfo _accessToken;
-    private readonly TinyOAuthConfig _config;
+    private readonly SmallOauthConfig _config;
 
-    public JiraController(IJiraApi jiraApi, ITinyOAuth tinyOAuth, TinyOAuthConfig config)
+    public JiraController(IJiraApi jiraApi, ISmallOauth tinyOAuth, SmallOauthConfig config)
     {
       _jiraApi = jiraApi ?? throw new ArgumentNullException(nameof(jiraApi));
-      _tinyOAuth = tinyOAuth ?? throw new ArgumentNullException(nameof(tinyOAuth));
+      _smallOauth = tinyOAuth ?? throw new ArgumentNullException(nameof(tinyOAuth));
       _config = config;
     }
 
     [HttpGet]
     public IActionResult Get()
     {
-      var requestTokenInfo = _tinyOAuth.GetRequestTokenAsync().Result;
+      var requestTokenInfo = _smallOauth.GetRequestTokenAsync().Result;
 
-      var authorizationUrl = _tinyOAuth.GetAuthorizationUrl(requestTokenInfo.RequestToken);
+      var authorizationUrl = _smallOauth.GetAuthorizationUrl(requestTokenInfo.RequestToken);
 
       return Redirect(authorizationUrl);
     }
@@ -40,9 +37,9 @@ namespace nfernopoker.Controllers
     public async Task<IActionResult> CallbackHandler(string oauth_token, string oauth_verifier)
     {
 
-      _accessToken = await _tinyOAuth.GetAccessTokenAsync(oauth_token, "nfernopoker2", oauth_verifier);
+      _accessToken = await _smallOauth.GetAccessTokenAsync(oauth_token, "nfernopoker2", oauth_verifier);
 
-      var httpClient = new HttpClient(new TinyOAuthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
+      var httpClient = new HttpClient(new SmallOauthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
 
       // Now we just use the HttpClient like normally
       var resp = await httpClient.GetAsync("https://nfernopoker.atlassian.net/rest/api/latest/issue/NFER-1.json");
@@ -54,7 +51,7 @@ namespace nfernopoker.Controllers
     [HttpGet("issue/{id}")]
     public async Task<JsonResult> GetIssueById(string id)
     {
-      var httpClient = new HttpClient(new TinyOAuthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
+      var httpClient = new HttpClient(new SmallOauthMessageHandler(_config, _accessToken.AccessToken, _accessToken.AccessTokenSecret));
 
       // Now we just use the HttpClient like normally
       var resp = await httpClient.GetAsync($"https://nfernopoker.atlassian.net/rest/api/latest/issue/{id}.json");
